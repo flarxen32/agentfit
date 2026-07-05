@@ -90,7 +90,7 @@ export function SuccessClient() {
             Payment not confirmed yet
           </h1>
           <p className="mt-4 text-zinc-600 dark:text-zinc-400">
-            If you believe this is an error, email <a href="mailto:hello@xro.com" className="text-emerald-600 underline">hello@xro.com</a> with your details and we&apos;ll sort it out.
+            If you believe this is an error, email <a href="mailto:hello@xablam.com" className="text-emerald-600 underline">hello@xablam.com</a> with your details and we&apos;ll sort it out.
           </p>
         </div>
       )}

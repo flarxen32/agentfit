@@ -67,7 +67,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[checkout/create] Stripe error:", err);
     return NextResponse.json(
-      { error: "Could not start checkout. Please try again or email hello@xro.com." },
+      { error: "Could not start checkout. Please try again or email hello@xablam.com." },
       { status: 502 },
     );
   }

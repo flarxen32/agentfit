@@ -79,7 +79,7 @@ export function OfferFormClient() {
       setErrorMsg(data.error || "Something went wrong. Please try again.");
       setStatus("error");
     } catch {
-      setErrorMsg("Network error. Please try again or email hello@xro.com.");
+      setErrorMsg("Network error. Please try again or email hello@xablam.com.");
       setStatus("error");
     }
   }
