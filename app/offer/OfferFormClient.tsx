@@ -34,6 +34,11 @@ export function OfferFormClient() {
   // URL into Vercel env (NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL).
   const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL || "";
 
+  // PayPal.me link is a second credential-free payment option. Set
+  // NEXT_PUBLIC_PAYPAL_ME_URL to a PayPal.me link (e.g.
+  // https://www.paypal.com/paypalme/yourhandle/750). No API keys needed.
+  const paypalLink = process.env.NEXT_PUBLIC_PAYPAL_ME_URL || "";
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
@@ -47,6 +52,18 @@ export function OfferFormClient() {
       url.searchParams.set("prefilled_email", email);
       url.searchParams.set("client_reference_id", email);
       window.location.href = url.toString();
+      return;
+    }
+
+    // Path 1b: PayPal.me link (no API keys needed, just a public URL)
+    if (paypalLink) {
+      // Capture the email as a lead before redirecting
+      await fetch("/api/email-capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role, fitScore, source: "offer_page_paypal" }),
+      }).catch(() => {});
+      window.location.href = paypalLink;
       return;
     }
 
@@ -136,7 +153,7 @@ export function OfferFormClient() {
             >
               {status === "submitting"
                 ? "Securing your spot…"
-                : paymentLink
+                : paymentLink || paypalLink
                   ? copy.offer.payButton
                   : "Claim my spot — $750"}
             </button>
