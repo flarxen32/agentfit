@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   const stripe = getStripe();
   if (!stripe) {
     return NextResponse.json(
-      { error: "Payment system is not configured yet. Email hello@xro.com to claim your spot." },
+      { error: "We're spinning up the next build cohort. Drop your email and we'll send your kickoff link within one business day." },
       { status: 503 },
     );
   }

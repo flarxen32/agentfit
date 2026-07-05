@@ -40,7 +40,7 @@ function firstTouchHtml(p: OutboundProspect): string {
 <p>Hi ${name},</p>
 ${taskLine}
 <p>We build custom AI agents that take that task off your plate — built in 7 days, $750 flat. If it doesn't save you hours, you don't pay.</p>
-<p>Want me to scope yours? <a href="https://agentfit.com/offer">Book a 30-minute call</a> and I'll come with a build plan already drafted.</p>
+<p>Want me to scope yours? <a href="https://agentfit-mu.vercel.app/offer">Book a 30-minute call</a> and I'll come with a build plan already drafted.</p>
 <p>— Alex<br/>AgentFit</p>
 </body></html>`;
 }
@@ -49,7 +49,7 @@ function firstTouchText(p: OutboundProspect): string {
   const taskLine = p.task
     ? `Based on your role${p.role ? ` as ${p.role}` : ""}, I'd bet your #1 time-sink is ${p.task}. ${p.hook ?? ""}`
     : (p.hook ?? "");
-  return `Hi ${name},\n\n${taskLine}\n\nWe build custom AI agents that take that task off your plate — built in 7 days, $750 flat. If it doesn't save you hours, you don't pay.\n\nWant me to scope yours? Book a 30-minute call: https://agentfit.com/offer — I'll come with a build plan already drafted.\n\n— Alex\nAgentFit`;
+  return `Hi ${name},\n\n${taskLine}\n\nWe build custom AI agents that take that task off your plate — built in 7 days, $750 flat. If it doesn't save you hours, you don't pay.\n\nWant me to scope yours? Book a 30-minute call: https://agentfit-mu.vercel.app/offer — I'll come with a build plan already drafted.\n\n— Alex\nAgentFit`;
 }
 
 const LOG = join(process.cwd(), "data", "outbound-log.jsonl");
