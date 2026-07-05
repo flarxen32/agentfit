@@ -49,18 +49,59 @@ export function isKVConfigured(): boolean {
 }
 
 /**
- * Append a capture to Vercel KV.
- *
- * Stores the lead as a JSON hash and adds it to a timestamp-ordered index
- * so /api/leads can return them newest-first.
- */
-export async function appendEmailCapture(capture: EmailCapture): Promise<void> {
-  const score = new Date(capture.capturedAt).getTime();
-  await Promise.all([
-    redis.set(`${LEAD_PREFIX}${capture.id}`, capture),
-    redis.zadd(LEAD_INDEX, { score, member: capture.id }),
-  ]);
-}
+ /** Append a capture to Vercel KV.
+  *
+  * Stores the lead as a JSON hash and adds it to a timestamp-ordered index
+  * so /api/leads can return them newest-first. Also fires a webhook
+  * notification so the team is alerted instantly about new high-fit leads.
+  */
+ export async function appendEmailCapture(capture: EmailCapture): Promise<void> {
+   const score = new Date(capture.capturedAt).getTime();
+   await Promise.all([
+     redis.set(`${LEAD_PREFIX}${capture.id}`, capture),
+     redis.zadd(LEAD_INDEX, { score, member: capture.id }),
+   ]);
+
+   // Fire-and-forget webhook notification for hot leads (FitScore >= 50)
+   // so the team can follow up immediately. Non-blocking, best-effort.
+   if (capture.fitScore >= 50) {
+     void notifyNewLead(capture).catch(() => {});
+   }
+ }
+
+ /**
+  * Send a webhook notification about a new hot lead.
+  * Uses Discord/Slack-compatible webhook URL if configured via env.
+  */
+ async function notifyNewLead(capture: EmailCapture): Promise<void> {
+   const webhookUrl = process.env.LEAD_WEBHOOK_URL;
+   if (!webhookUrl) return;
+
+   const message = {
+     content: `🔥 **New AgentFit Lead** (FitScore: ${capture.fitScore}/100)`,
+     embeds: [
+       {
+         title: `Lead: ${capture.email}`,
+         fields: [
+           { name: "Role", value: capture.role || "—" },
+           { name: "Task", value: capture.task || "—" },
+           { name: "Industry", value: capture.industry || "—" },
+           { name: "Tools", value: capture.tools || "—" },
+           { name: "Hours/wk", value: String(capture.hoursPerWeek || "—") },
+           { name: "Captured", value: capture.capturedAt },
+         ],
+         color: 0x10b981,
+         url: "https://agentfit-mu.vercel.app/offer",
+       },
+     ],
+   };
+
+   await fetch(webhookUrl, {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify(message),
+   });
+ }
 
 /** Read all captures (for /api/leads export), newest-first. */
 export async function readEmailCaptures(limit = 200): Promise<EmailCapture[]> {
