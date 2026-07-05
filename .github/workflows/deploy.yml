@@ -9,42 +9,44 @@ jobs:
   deploy:
     name: Deploy to Vercel (preview)
     runs-on: ubuntu-latest
-    if: ${{ secrets.VERCEL_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check for Vercel token
+        id: check
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "No VERCEL_TOKEN secret set — skipping deploy (see README Deployment section)"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Node.js
+        if: steps.check.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Install Vercel CLI
+        if: steps.check.outputs.skip != 'true'
         run: npm i -g vercel@latest
 
-      - name: Pull Vercel env
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }} || true
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }} || npm run build
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
       - name: Deploy preview
+        if: steps.check.outputs.skip != 'true'
         id: deploy
         run: |
-          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tee /dev/stderr | tail -1)
+          vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }} > url.txt 2>&1 || true
+          URL=$(tail -1 url.txt)
           echo "preview_url=$URL" >> $GITHUB_OUTPUT
+          cat url.txt
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Comment PR with preview URL
-        if: github.event_name == 'pull_request'
+        if: steps.check.outputs.skip != 'true' && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
