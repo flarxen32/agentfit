@@ -19,7 +19,9 @@ export type AnalyticsEvent =
   | "report_generated"
   | "cta_clicked"
   | "report_shared"
-  | "email_captured";
+  | "email_captured"
+  | "offer_cta_clicked"
+  | "checkout_initiated";
 
 // Plausible custom-event names use colons; map our events to those.
 const PLAUSIBLE_EVENT_MAP: Record<AnalyticsEvent, string> = {
@@ -29,6 +31,8 @@ const PLAUSIBLE_EVENT_MAP: Record<AnalyticsEvent, string> = {
   cta_clicked: "CTA Clicked",
   report_shared: "Report Shared",
   email_captured: "Email Captured",
+  offer_cta_clicked: "Offer CTA Clicked",
+  checkout_initiated: "Checkout Initiated",
 };
 
 interface PlausibleWindow extends Window {

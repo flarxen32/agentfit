@@ -1,0 +1,15 @@
+{
+  "sku": "custom-agent-build",
+  "name": "Custom AI Agent Build",
+  "description": "A custom AI agent built around your specific workflow. 7-day turnaround from kickoff call. $750 flat. Money-back guarantee if it doesn't save you hours.",
+  "price": 75000,
+  "currency": "usd",
+  "mode": "payment",
+  "features": [
+    "Custom AI agent built around your specific workflow",
+    "7-day turnaround from kickoff call",
+    "$750 flat — no retainers, no setup fees",
+    "Money-back guarantee if it doesn't save you hours",
+    "Direct access to your builder for the whole week"
+  ]
+}

@@ -4,8 +4,11 @@
  * OfferFormClient — the Bet #1 offer form on /offer.
  *
  * Reads the audit context from URL search params (role, fit score, estimated
- * savings) and shows a high-intent email capture form. On submit, fires the
- * `email_captured` analytics event and shows a confirmation message.
+ * savings). Shows a high-intent email capture form. On submit:
+ *   - If Stripe is configured (STRIPE_SECRET_KEY), redirects to Stripe
+ *     Checkout for the $750 custom agent build.
+ *   - If Stripe is not configured, captures the email and shows a "we'll
+ *     follow up" confirmation (lead-gen fallback).
  *
  * Split into a client component so we can use useSearchParams (requires a
  * Suspense boundary in the server page).
@@ -23,34 +26,51 @@ export function OfferFormClient() {
   const annualSavings = params.get("annualSavings") || "";
 
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "captured" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  // When a Stripe Payment Link is configured, the primary CTA becomes a real
-  // $750 checkout. When unset, falls back to email-capture (lead gen) mode.
-  const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL || "";
-  const hasCheckout = paymentLink.length > 0;
-
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
 
-    track("email_captured", {
-      source: "offer_page",
-      role,
-      fitScore,
-      annualSavings,
-    });
+    setStatus("submitting");
+    track("offer_cta_clicked", { source: "offer_page", role, fitScore, annualSavings });
 
-    if (hasCheckout) {
-      // Append the email as a prefilled customer_email so Stripe checkout
-      // carries the lead context through to the receipt.
-      const url = new URL(paymentLink);
-      url.searchParams.set("client_reference_id", email);
-      url.searchParams.set("prefilled_email", email);
-      window.location.href = url.toString();
-      return;
+    try {
+      // Try Stripe checkout first. If payment is configured, this redirects.
+      // If not (503), we fall back to email capture.
+      const res = await fetch("/api/checkout/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role, fitScore, source: "agentfit_offer" }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.url) {
+        // Redirect to Stripe-hosted checkout
+        window.location.href = data.url;
+        return; // page is navigating away
+      }
+
+      // Stripe not configured (503) — capture as a lead instead
+      if (res.status === 503) {
+        await fetch("/api/email-capture", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, role, fitScore, source: "offer_page_checkout_fallback" }),
+        });
+        track("email_captured", { source: "offer_page_fallback", role, fitScore, annualSavings });
+        setStatus("captured");
+        return;
+      }
+
+      // Some other error
+      setErrorMsg(data.error || "Something went wrong. Please try again.");
+      setStatus("error");
+    } catch {
+      setErrorMsg("Network error. Please try again or email hello@xro.com.");
+      setStatus("error");
     }
-    setSubmitted(true);
   }
 
   const contextLine = [
@@ -80,7 +100,7 @@ export function OfferFormClient() {
       </div>
 
       <div className="rounded-3xl border-2 border-emerald-500 bg-emerald-50 p-8 dark:bg-emerald-950/40">
-        {!submitted ? (
+        {status !== "captured" ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <label
               htmlFor="email"
@@ -95,14 +115,19 @@ export function OfferFormClient() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={copy.offer.emailPlaceholder}
-              className="w-full rounded-xl border border-emerald-300 bg-white px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none dark:border-emerald-700 dark:bg-zinc-900 dark:text-zinc-50"
+              disabled={status === "submitting"}
+              className="w-full rounded-xl border border-emerald-300 bg-white px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none disabled:opacity-50 dark:border-emerald-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <button
               type="submit"
-              className="w-full rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              disabled={status === "submitting"}
+              className="w-full rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
-              {hasCheckout ? copy.offer.payButton : copy.offer.ctaButton}
+              {status === "submitting" ? "Securing your spot…" : "Claim my spot — $750"}
             </button>
+            {status === "error" && (
+              <p className="text-center text-sm text-red-600">{errorMsg}</p>
+            )}
             <p className="text-center text-xs text-emerald-700 dark:text-emerald-300">
               {copy.offer.guarantee}
             </p>
