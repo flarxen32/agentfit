@@ -29,6 +29,11 @@ export function OfferFormClient() {
   const [status, setStatus] = useState<"idle" | "submitting" | "captured" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Payment Link is the simplest checkout path — just a public URL, no secret
+  // key required. Checked first so the CEO can enable checkout by pasting one
+  // URL into Vercel env (NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL).
+  const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL || "";
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
@@ -36,9 +41,17 @@ export function OfferFormClient() {
     setStatus("submitting");
     track("offer_cta_clicked", { source: "offer_page", role, fitScore, annualSavings });
 
+    // Path 1: Stripe Payment Link (no server code needed)
+    if (paymentLink) {
+      const url = new URL(paymentLink);
+      url.searchParams.set("prefilled_email", email);
+      url.searchParams.set("client_reference_id", email);
+      window.location.href = url.toString();
+      return;
+    }
+
     try {
-      // Try Stripe checkout first. If payment is configured, this redirects.
-      // If not (503), we fall back to email capture.
+      // Path 2: Stripe Checkout Session (requires STRIPE_SECRET_KEY server-side)
       const res = await fetch("/api/checkout/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,12 +60,11 @@ export function OfferFormClient() {
       const data = await res.json();
 
       if (res.ok && data.url) {
-        // Redirect to Stripe-hosted checkout
         window.location.href = data.url;
-        return; // page is navigating away
+        return;
       }
 
-      // Stripe not configured (503) — capture as a lead instead
+      // Path 3: Neither configured — capture as a lead
       if (res.status === 503) {
         await fetch("/api/email-capture", {
           method: "POST",
@@ -64,7 +76,6 @@ export function OfferFormClient() {
         return;
       }
 
-      // Some other error
       setErrorMsg(data.error || "Something went wrong. Please try again.");
       setStatus("error");
     } catch {
@@ -123,7 +134,11 @@ export function OfferFormClient() {
               disabled={status === "submitting"}
               className="w-full rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
-              {status === "submitting" ? "Securing your spot…" : "Claim my spot — $750"}
+              {status === "submitting"
+                ? "Securing your spot…"
+                : paymentLink
+                  ? copy.offer.payButton
+                  : "Claim my spot — $750"}
             </button>
             {status === "error" && (
               <p className="text-center text-sm text-red-600">{errorMsg}</p>
