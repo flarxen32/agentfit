@@ -80,6 +80,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     `${base}/learn/ai-agents-for-agencies`,
     `${base}/learn/ai-agent-examples`,
     `${base}/learn/best-ai-automation-tools`,
+    `${base}/learn/ai-agent-vs-zapier`,
   ].map((url) => ({
     url,
     lastModified: new Date(),

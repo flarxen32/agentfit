@@ -90,6 +90,13 @@ const guides = [
       "The honest comparison: when ChatGPT is enough, when you need a custom agent, and the cost/effort math for each.",
     readTime: "5 min read",
   },
+  {
+    href: "/learn/ai-agent-vs-zapier",
+    title: "AI Agent vs Zapier: Which Automation Tool Do You Actually Need?",
+    description:
+      "Zapier connects apps with fixed rules. AI agents handle judgment calls, messy data, and open-ended tasks. See when each wins.",
+    readTime: "6 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
