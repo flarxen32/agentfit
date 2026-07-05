@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AuditFlow from "@/components/audit/AuditFlow";
 
 const jsonLd = {
@@ -27,6 +28,25 @@ export default function Home() {
         }}
       />
       <AuditFlow />
+      <footer className="mt-12 border-t border-zinc-200 py-8 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          <Link href="/industries" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            Browse by industry
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/learn" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            Guides
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/how-it-works" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            How it works
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/offer" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            Custom agent build
+          </Link>
+        </div>
+      </footer>
     </main>
   );
 }
