@@ -67,10 +67,16 @@ export function isKVConfigured(): boolean {
    await redis.set(key, capture);
    await redis.zadd(LEAD_INDEX, { score, member: capture.id });
 
-   // Fire-and-forget webhook notification for hot leads (FitScore >= 50)
-   // so the team can follow up immediately. Non-blocking, best-effort.
+   // Webhook notification for hot leads (FitScore >= 50) so the team can
+   // follow up immediately. Awaited (not fire-and-forget) because Vercel
+   // serverless kills background fetches once the response is returned.
+   // Errors are caught so a webhook outage never blocks lead capture.
    if (capture.fitScore >= 50) {
-     void notifyNewLead(capture).catch(() => {});
+     try {
+       await notifyNewLead(capture);
+     } catch {
+       // Webhook failed — lead is still saved, which is the critical path.
+     }
    }
  }
 
