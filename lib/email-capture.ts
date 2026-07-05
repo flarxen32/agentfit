@@ -11,7 +11,7 @@ import { Redis } from "@upstash/redis";
  *   - lead:{id}            → the full lead object
  *   - lead_index           → a sorted set scored by timestamp for ordering
  *
- * Schema: { id, capturedAt, email, fitScore, grade, role, task, tools, source }
+ * Schema: { id, capturedAt, email, fitScore, grade, role, task, tools, industry, hoursPerWeek, source }
  */
 
 const redis = new Redis({
@@ -36,6 +36,10 @@ export interface EmailCapture {
   task: string;
   /** Tools the visitor selected, if available. */
   tools: string;
+  /** Visitor's industry from the audit, if available. */
+  industry: string;
+  /** Hours per week the visitor spends on the task, if available. */
+  hoursPerWeek: number;
   source: string;
 }
 

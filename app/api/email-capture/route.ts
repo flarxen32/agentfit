@@ -5,10 +5,11 @@ import { appendEmailCapture } from "@/lib/email-capture";
  * POST /api/email-capture
  *
  * Captures a visitor's email from the Report Card ("Email me my report").
- * Records their fit score, grade, role, task, and tools at capture time
- * so the outbound list (XRO-10) carries the full audit context per lead.
+ * Records the full audit context (fit score, grade, role, task, tools,
+ * industry, hoursPerWeek) at capture time so the outbound list (XRO-10)
+ * carries the full funnel context per lead.
  *
- * Body: { email, fitScore, grade, role, task, tools }
+ * Body: { email, fitScore, grade, role, task, tools, industry, hoursPerWeek }
  * Returns: { ok: true, id }
  */
 export async function POST(req: Request) {
@@ -24,8 +25,10 @@ export async function POST(req: Request) {
   const role = String(body.role || "").trim();
   const task = String(body.task || "").trim();
   const tools = String(body.tools || "").trim();
+  const industry = String(body.industry || "").trim();
   const grade = String(body.grade || "").trim();
   const fitScore = Number(body.fitScore) || 0;
+  const hoursPerWeek = Number(body.hoursPerWeek) || 0;
 
   if (!email) {
     return NextResponse.json({ error: "Email is required" }, { status: 422 });
@@ -51,6 +54,8 @@ export async function POST(req: Request) {
     role,
     task,
     tools,
+    industry,
+    hoursPerWeek,
     source: "agentfit-report-card",
   };
 

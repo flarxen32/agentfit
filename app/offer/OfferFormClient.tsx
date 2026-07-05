@@ -24,6 +24,9 @@ export function OfferFormClient() {
   const role = params.get("role") || "your role";
   const fitScore = params.get("fitScore") || "";
   const annualSavings = params.get("annualSavings") || "";
+  const task = params.get("task") || "";
+  const tools = params.get("tools") || "";
+  const industry = params.get("industry") || "";
 
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "captured" | "error">("idle");
@@ -86,7 +89,16 @@ export function OfferFormClient() {
         await fetch("/api/email-capture", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, role, fitScore, source: "offer_page_checkout_fallback" }),
+          body: JSON.stringify({
+            email,
+            role,
+            fitScore,
+            task,
+            tools,
+            industry,
+            grade: "",
+            source: "agentfit-report-card",
+          }),
         });
         track("email_captured", { source: "offer_page_fallback", role, fitScore, annualSavings });
         setStatus("captured");

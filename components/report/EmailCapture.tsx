@@ -19,6 +19,8 @@ interface EmailCaptureProps {
   role: string;
   task: string;
   tools: string;
+  industry: string;
+  hoursPerWeek: number;
 }
 
 export function EmailCapture({
@@ -27,6 +29,8 @@ export function EmailCapture({
   role,
   task,
   tools,
+  industry,
+  hoursPerWeek,
 }: EmailCaptureProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
@@ -41,7 +45,7 @@ export function EmailCapture({
       const res = await fetch("/api/email-capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, fitScore, grade, role, task, tools }),
+        body: JSON.stringify({ email, fitScore, grade, role, task, tools, industry, hoursPerWeek }),
       });
       const data = await res.json();
       if (!res.ok) {

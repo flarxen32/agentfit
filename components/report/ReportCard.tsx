@@ -8,7 +8,7 @@
  * artifact. This is the payoff of the AgentFit funnel.
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { scoreReport, type AuditInput } from "@/lib/engine";
 import { track } from "@/lib/analytics";
 import { copy } from "@/content/copy";
@@ -30,8 +30,12 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
     [input, hourlyRate],
   );
 
-  // Track that a report was generated (once per mount).
-  useMemo(() => {
+  // Track that a report was generated (once per score change).
+  // useEffect, not useMemo — side effects in useMemo are an anti-pattern
+  // that can fire unpredictably under React 19 (Strict Mode double-invoke,
+  // re-renders during hydration), which was a contributing factor to the
+  // stale/empty prop values seen in XRO-35.
+  useEffect(() => {
     track("report_generated", { fitScore: score.fitScore, grade: score.grade });
   }, [score]);
 
@@ -45,6 +49,9 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
       role: input.role,
       fitScore: String(score.fitScore),
       annualSavings: String(score.estimatedAnnualSavings),
+      task: input.taskDescription,
+      tools: input.tools.join(", "),
+      industry: input.industry,
     });
     return `/offer?${params.toString()}`;
   }, [input, score.fitScore, score.estimatedAnnualSavings]);
@@ -130,6 +137,8 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
             role={input.role}
             task={input.taskDescription}
             tools={input.tools.join(", ")}
+            industry={input.industry}
+            hoursPerWeek={input.hoursPerWeek}
           />
         </div>
       </section>
