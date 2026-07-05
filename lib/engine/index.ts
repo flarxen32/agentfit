@@ -13,3 +13,11 @@ export {
 } from "./classifier";
 
 export { estimateRoi, type RoiBand, type RoiResult } from "./roi";
+
+export {
+  scoreReport,
+  scoreToGrade,
+  type Grade,
+  type RankedTask,
+  type ReportScore,
+} from "./scoring";
