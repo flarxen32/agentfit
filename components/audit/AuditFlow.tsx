@@ -95,10 +95,18 @@ export default function AuditFlow() {
       outputDescription: state.output.trim(),
     };
     track("step_completed", { step: "output", stepNumber: TOTAL_STEPS });
-    // Encode answers into the report route so XRO-16 can render them.
-    const encoded = encodeURIComponent(JSON.stringify(input));
     track("report_generated", { hoursPerWeek: input.hoursPerWeek });
-    router.push(`/report?a=${encoded}`);
+    // Pass answers as individual query params so the report route (XRO-16)
+    // can read them and the URL stays human-readable / shareable.
+    const params = new URLSearchParams({
+      role: input.role,
+      industry: input.industry,
+      task: input.taskDescription,
+      hours: String(input.hoursPerWeek),
+      tools: input.tools.join(","),
+      output: input.outputDescription,
+    });
+    router.push(`/report?${params.toString()}`);
   }, [router, state]);
 
   const handleNext = useCallback(() => {
