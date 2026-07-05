@@ -97,6 +97,27 @@ const guides = [
       "Zapier connects apps with fixed rules. AI agents handle judgment calls, messy data, and open-ended tasks. See when each wins.",
     readTime: "6 min read",
   },
+  {
+    href: "/learn/ai-agent-pricing",
+    title: "AI Agent Pricing in 2026: What a Custom Agent Actually Costs",
+    description:
+      "The only honest breakdown of custom AI agent pricing. Real cost ranges ($500–$50,000+), what you get at each tier, and what drives the price up or down.",
+    readTime: "7 min read",
+  },
+  {
+    href: "/learn/automate-reporting-with-ai",
+    title: "How to Automate Reporting with AI: 2026 Guide",
+    description:
+      "Reporting eats 3-10 hours/week. Real workflows for sales, client, and ops reporting — with before/after, tool stacks, and ROI math.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/learn/ai-automation-for-solo-founders",
+    title: "AI Automation for Solo Founders: Reclaim 20+ Hours Per Week",
+    description:
+      "Solo founders wear every hat. Here are the 7 highest-impact tasks to automate — with real workflows, tool stacks, and hours saved.",
+    readTime: "8 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
