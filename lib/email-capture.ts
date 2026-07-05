@@ -57,10 +57,15 @@ export function isKVConfigured(): boolean {
   */
  export async function appendEmailCapture(capture: EmailCapture): Promise<void> {
    const score = new Date(capture.capturedAt).getTime();
-   await Promise.all([
-     redis.set(`${LEAD_PREFIX}${capture.id}`, capture),
-     redis.zadd(LEAD_INDEX, { score, member: capture.id }),
-   ]);
+   const key = `${LEAD_PREFIX}${capture.id}`;
+
+   // Store the lead record FIRST. Only add to the index after the record
+   // is durably saved — this prevents orphan index entries (where the index
+   // points to a lead that was never stored) if one of the two operations
+   // fails. Previously used Promise.all which could leave orphans on partial
+   // failure.
+   await redis.set(key, capture);
+   await redis.zadd(LEAD_INDEX, { score, member: capture.id });
 
    // Fire-and-forget webhook notification for hot leads (FitScore >= 50)
    // so the team can follow up immediately. Non-blocking, best-effort.
@@ -103,14 +108,25 @@ export function isKVConfigured(): boolean {
    });
  }
 
-/** Read all captures (for /api/leads export), newest-first. */
+/** Read all captures (for /api/leads export), newest-first.
+ *  Silently filters out orphan index entries (IDs in the sorted set whose
+ *  lead record is missing — can happen from old race conditions before the
+ *  fix in the write path). */
 export async function readEmailCaptures(limit = 200): Promise<EmailCapture[]> {
   // Get the newest `limit` member IDs from the sorted set (descending)
   const ids = await redis.zrange(LEAD_INDEX, 0, limit - 1, { rev: true });
   if (!ids || ids.length === 0) return [];
 
-  const keys = (ids as string[]).map((id) => `${LEAD_PREFIX}${id}`);
+  const idArr = ids as string[];
+  const keys = idArr.map((id) => `${LEAD_PREFIX}${id}`);
   const records = await redis.mget<EmailCapture[]>(...keys);
+
+  // Detect orphan entries and clean them from the index so total/count stay
+  // consistent. Fire-and-forget — don't block the read on cleanup.
+  const orphans = idArr.filter((_, i) => records[i] === null);
+  if (orphans.length > 0) {
+    void redis.zrem(LEAD_INDEX, ...orphans).catch(() => {});
+  }
 
   return records.filter((r): r is EmailCapture => r !== null);
 }
