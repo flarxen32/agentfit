@@ -73,11 +73,9 @@ export function isKVConfigured(): boolean {
    // Errors are caught so a webhook outage never blocks lead capture.
    if (capture.fitScore >= 50) {
      try {
-       console.log("[lead-notify] Starting webhook for", capture.email, "score", capture.fitScore);
        await notifyNewLead(capture);
-       console.log("[lead-notify] Webhook sent successfully for", capture.email);
      } catch (err) {
-       console.error("[lead-notify] Webhook FAILED for", capture.email, err instanceof Error ? err.message : String(err));
+       console.error("[lead-notify] Webhook failed for", capture.email, ":", err instanceof Error ? err.message : String(err));
      }
    }
  }
