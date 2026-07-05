@@ -5,10 +5,12 @@
  *
  * Reads the audit context from URL search params (role, fit score, estimated
  * savings). Shows a high-intent email capture form. On submit:
- *   - If Stripe is configured (STRIPE_SECRET_KEY), redirects to Stripe
- *     Checkout for the $750 custom agent build.
- *   - If Stripe is not configured, captures the email and shows a "we'll
- *     follow up" confirmation (lead-gen fallback).
+ *   - If Stripe Payment Link is configured, redirects to Stripe Checkout.
+ *   - If PayPal.me is configured, captures email then redirects to PayPal.
+ *   - If Stripe Checkout API is configured (STRIPE_SECRET_KEY), creates a session.
+ *   - If a booking link is configured (NEXT_PUBLIC_BOOKING_URL), captures email
+ *     then redirects to the scheduling page (Cal.com, Calendly, etc.).
+ *   - Otherwise captures the email and shows a "we'll follow up" confirmation.
  *
  * Split into a client component so we can use useSearchParams (requires a
  * Suspense boundary in the server page).
@@ -41,6 +43,14 @@ export function OfferFormClient() {
   // NEXT_PUBLIC_PAYPAL_ME_URL to a PayPal.me link (e.g.
   // https://www.paypal.com/paypalme/yourhandle/750). No API keys needed.
   const paypalLink = process.env.NEXT_PUBLIC_PAYPAL_ME_URL || "";
+
+  // Booking/scheduling link (Cal.com, Calendly, etc.). Set
+  // NEXT_PUBLIC_BOOKING_URL to redirect interested prospects to a scheduling
+  // page after capturing their email. No payment credentials needed.
+  const bookingLink = process.env.NEXT_PUBLIC_BOOKING_URL || "";
+
+  // Track which conversion path is active so the button label matches.
+  const hasPayment = !!(paymentLink || paypalLink);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -84,7 +94,30 @@ export function OfferFormClient() {
         return;
       }
 
-      // Path 3: Neither configured — capture as a lead
+      // Path 3: Neither configured — try booking link
+      if (res.status === 503 && bookingLink) {
+        await fetch("/api/email-capture", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            role,
+            fitScore,
+            task,
+            tools,
+            industry,
+            grade: "",
+            source: "offer_page_booking",
+          }),
+        });
+        track("email_captured", { source: "offer_page_booking", role, fitScore, annualSavings });
+        const url = new URL(bookingLink);
+        url.searchParams.set("email", email);
+        window.location.href = url.toString();
+        return;
+      }
+
+      // Path 4: No payment, no booking — capture as a lead
       if (res.status === 503) {
         await fetch("/api/email-capture", {
           method: "POST",
@@ -165,9 +198,11 @@ export function OfferFormClient() {
             >
               {status === "submitting"
                 ? "Securing your spot…"
-                : paymentLink || paypalLink
+                : hasPayment
                   ? copy.offer.payButton
-                  : "Claim my spot — $750"}
+                  : bookingLink
+                    ? "Book my scoping call →"
+                    : "Claim my spot — $750"}
             </button>
             {status === "error" && (
               <p className="text-center text-sm text-red-600">{errorMsg}</p>
