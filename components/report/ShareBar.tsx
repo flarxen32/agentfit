@@ -10,16 +10,14 @@
  * No external dependencies — pure client-side.
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { track } from "@/lib/analytics";
 
 export function ShareBar() {
-  const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    setUrl(window.location.href);
-  }, []);
+  // Read the URL lazily — only on the client, only when needed.
+  const url = typeof window !== "undefined" ? window.location.href : "";
 
   const shareText =
     "I just got my AI Automation Fit score. See what an agent could do for you:";

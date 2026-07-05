@@ -21,11 +21,9 @@ const GRADE_COLORS: Record<Grade, string> = {
 export function ScoreGauge({
   score,
   grade,
-  gradeLabel,
 }: {
   score: number;
   grade: Grade;
-  gradeLabel: string;
 }) {
   const color = GRADE_COLORS[grade];
 

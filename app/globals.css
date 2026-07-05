@@ -24,3 +24,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Print styles — produce a clean PDF when the visitor uses "Save PDF". */
+@media print {
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  /* Hide everything outside the report card on print */
+  main > *:not(.print-visible) {
+    /* allow the report article through */
+  }
+}
