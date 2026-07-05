@@ -98,30 +98,40 @@ export function isKVConfigured(): boolean {
    const isNtfy = webhookUrl.includes("ntfy.sh");
 
    if (isNtfy) {
-     // ntfy.sh: plain-text body + headers for title, tags, priority, click URL
-     const body = [
-       `🔥 New AgentFit Lead (FitScore: ${capture.fitScore}/100)`,
+     // ntfy.sh: POST as JSON body (more reliable than custom headers in
+     // serverless fetch implementations like undici which may reject
+     // non-standard header names).
+     const message = [
+       `New AgentFit Lead (FitScore: ${capture.fitScore}/100)`,
        ``,
        `Email: ${capture.email}`,
-       `Role: ${capture.role || "—"}`,
-       `Industry: ${capture.industry || "—"}`,
-       `Top task: ${capture.task || "—"}`,
-       `Tools: ${capture.tools || "—"}`,
-       `Hours/wk: ${capture.hoursPerWeek || "—"}`,
+       `Role: ${capture.role || "-"}`,
+       `Industry: ${capture.industry || "-"}`,
+       `Top task: ${capture.task || "-"}`,
+       `Tools: ${capture.tools || "-"}`,
+       `Hours/wk: ${capture.hoursPerWeek || "-"}`,
        ``,
-       `Follow up now → response rates drop 60x after 24h`,
+       `Follow up now - response rates drop 60x after 24h`,
      ].join("\n");
 
-     await fetch(webhookUrl, {
+     const payload = {
+       topic: webhookUrl.split("/").pop() || "",
+       message,
+       title: `Lead: ${capture.email} (FitScore ${capture.fitScore})`,
+       tags: ["money", "bell"],
+       priority: capture.fitScore >= 70 ? 4 : 3,
+       click: "https://agentfit-mu.vercel.app/offer",
+     };
+
+     const resp = await fetch("https://ntfy.sh", {
        method: "POST",
-       headers: {
-         Title: `🔥 Lead: ${capture.email} (FitScore ${capture.fitScore})`,
-         Tags: "bell,money,lead",
-         Priority: capture.fitScore >= 70 ? "high" : "default",
-         Click: "https://agentfit-mu.vercel.app/offer",
-       },
-       body,
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(payload),
      });
+
+     if (!resp.ok) {
+       throw new Error(`ntfy returned ${resp.status}: ${await resp.text()}`);
+     }
      return;
    }
 
