@@ -40,5 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# runtime data (email captures, etc.)
+# runtime data (email captures, outbound prospects, send logs)
 /data
+# but keep the example prospect schema
+!/data/outbound-prospects.example.json
