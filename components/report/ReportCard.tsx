@@ -17,6 +17,7 @@ import { SavingsChart } from "./SavingsChart";
 import { TopTasks } from "./TopTasks";
 import { AgentSample } from "./AgentSample";
 import { ShareBar } from "./ShareBar";
+import { EmailCapture } from "./EmailCapture";
 
 interface ReportCardProps {
   input: AuditInput;
@@ -33,6 +34,20 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
   useMemo(() => {
     track("report_generated", { fitScore: score.fitScore, grade: score.grade });
   }, [score]);
+
+  // Build the Bet #1 offer URL with audit data pre-filled into the intake form.
+  // The offer page (XRO-11) reads these query params to pre-populate its fields.
+  const offerUrl = useMemo(() => {
+    const base =
+      process.env.NEXT_PUBLIC_OFFER_URL || "http://localhost:3001";
+    const params = new URLSearchParams({
+      role: input.role,
+      task: input.taskDescription,
+      tools: input.tools.join(", "),
+      source: "agentfit-report",
+    });
+    return `${base}/?${params.toString()}`;
+  }, [input]);
 
   return (
     <article className="mx-auto w-full max-w-2xl">
@@ -98,12 +113,25 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
           {copy.report.cta}
         </p>
         <a
-          href={`/offer?role=${encodeURIComponent(input.role)}&fitScore=${score.fitScore}&annualSavings=${score.estimatedAnnualSavings}`}
+          href={offerUrl}
           onClick={() => track("cta_clicked", { source: "report_card" })}
           className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-zinc-900 px-8 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           {copy.report.ctaButton}
         </a>
+
+        <div className="mt-6 border-t border-emerald-200 pt-6 dark:border-emerald-800">
+          <p className="text-sm text-emerald-800 dark:text-emerald-200">
+            Not ready to book? Get your report by email — no call required.
+          </p>
+          <EmailCapture
+            fitScore={score.fitScore}
+            grade={score.grade}
+            role={input.role}
+            task={input.taskDescription}
+            tools={input.tools.join(", ")}
+          />
+        </div>
       </section>
 
       {/* === Footer === */}
