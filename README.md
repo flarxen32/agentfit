@@ -30,9 +30,10 @@ A single-page interactive experience (3–5 minutes, no account required):
 ```
 agentfit/
 ├── app/                      # Next.js App Router routes
-│   ├── layout.tsx
+│   ├── layout.tsx            # Root layout + Plausible script
 │   ├── page.tsx              # Landing + audit flow
 │   ├── report/page.tsx       # Shareable report card
+│   ├── offer/page.tsx        # Bet #1 offer page (email capture)
 │   └── api/score/route.ts    # Optional agent-assisted classification endpoint
 ├── components/
 │   ├── audit/                # Multi-step audit flow components
@@ -76,7 +77,7 @@ Landing (hero + CTA)
    → Audit flow (multi-step questionnaire, client-side state)
    → Scoring engine (pure TS: classifier + ROI estimator)
    → Report Card (fit score, top-3 tasks, savings viz, share)
-   → CTA → Bet #1 offer page (email capture)
+   → CTA → /offer (Bet #1 offer page, email capture)
 ```
 
 **Scoring engine** (`lib/engine/`) — pure TypeScript functions, no side
@@ -99,9 +100,23 @@ Analytics is opt-in via [Plausible](https://plausible.dev/):
 
 1. Set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` in your `.env.local` (e.g.
    `agentfit.vercel.app`).
-2. Uncomment the Plausible `<Script>` tag in `app/layout.tsx`.
+2. The Plausible `<Script>` tag in `app/layout.tsx` is automatically
+   included when the env var is set — no manual uncommenting needed.
 3. Deploy — events fire automatically from the `track()` calls in each
    funnel step.
+
+**Events tracked:**
+
+| Event | Fired when |
+|-------|-----------|
+| `audit_started` | Visitor clicks "Start the 60-second audit" |
+| `step_completed` | Each step validated and advanced |
+| `report_generated` | Report card rendered (funnel completion) |
+| `cta_clicked` | Visitor clicks "Get your custom agent" on the report |
+| `report_shared` | Copy link, social share, or PDF download |
+| `email_captured` | Email submitted on the `/offer` page |
+
+In dev (`NODE_ENV=development`), events log to `console.debug`.
 
 ## Environment variables
 

@@ -98,9 +98,7 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
           {copy.report.cta}
         </p>
         <a
-          href={`mailto:hello@agentfit.com?subject=Build%20my%20custom%20agent&body=${encodeURIComponent(
-            `Role: ${input.role}\nTask: ${input.taskDescription}\nFit score: ${score.fitScore} (${score.grade})\nEst. annual savings: $${score.estimatedAnnualSavings.toLocaleString()}`,
-          )}`}
+          href={`/offer?role=${encodeURIComponent(input.role)}&fitScore=${score.fitScore}&annualSavings=${score.estimatedAnnualSavings}`}
           onClick={() => track("cta_clicked", { source: "report_card" })}
           className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-zinc-900 px-8 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
