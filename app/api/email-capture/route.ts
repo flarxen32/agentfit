@@ -29,6 +29,7 @@ export async function POST(req: Request) {
   const grade = String(body.grade || "").trim();
   const fitScore = Number(body.fitScore) || 0;
   const hoursPerWeek = Number(body.hoursPerWeek) || 0;
+  const source = String(body.source || "agentfit-report-card").trim();
 
   if (!email) {
     return NextResponse.json({ error: "Email is required" }, { status: 422 });
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
     tools,
     industry,
     hoursPerWeek,
-    source: "agentfit-report-card",
+    source,
   };
 
   try {
