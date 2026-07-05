@@ -190,13 +190,17 @@ export function OfferFormClient() {
               {copy.offer.successBody}
             </p>
             <a
-              href={`mailto:hello@xablam.com?subject=Custom%20AI%20Agent%20Build%20-%20$750&body=Hi%2C%0A%0AI%20just%20completed%20the%20AgentFit%20audit%20and%20I%27m%20interested%20in%20the%20custom%20AI%20agent%20build.%0A%0AMy%20details%3A%0A-%20Role%3A%20${encodeURIComponent(role)}%0A-%20Task%3A%20${encodeURIComponent(task)}%0A-%20Industry%3A%20${encodeURIComponent(industry)}%0A-%20Fit%20Score%3A%20${fitScore}%0A%0AWhen%20can%20we%20schedule%20the%20scoping%20call%3F`}
-              className="mt-4 inline-block rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+              href={`mailto:hello@xablam.com?subject=${encodeURIComponent(`Custom AI Agent — FitScore ${fitScore || "N/A"} (${role})`)}&body=${encodeURIComponent("Hi,\n\nI just completed the AgentFit audit and want to learn more about the $750 custom agent build.\n\nMy top task I'd automate: [describe your repetitive task]\n\nThanks!")}`}
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-400"
             >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
               Email us now to get started
             </a>
             <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400">
-              Or just reply to this email — we respond within 2 hours.
+              We respond within a few hours.
             </p>
           </div>
         )}
