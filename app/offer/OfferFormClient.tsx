@@ -25,6 +25,11 @@ export function OfferFormClient() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  // When a Stripe Payment Link is configured, the primary CTA becomes a real
+  // $750 checkout. When unset, falls back to email-capture (lead gen) mode.
+  const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL || "";
+  const hasCheckout = paymentLink.length > 0;
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
@@ -35,6 +40,16 @@ export function OfferFormClient() {
       fitScore,
       annualSavings,
     });
+
+    if (hasCheckout) {
+      // Append the email as a prefilled customer_email so Stripe checkout
+      // carries the lead context through to the receipt.
+      const url = new URL(paymentLink);
+      url.searchParams.set("client_reference_id", email);
+      url.searchParams.set("prefilled_email", email);
+      window.location.href = url.toString();
+      return;
+    }
     setSubmitted(true);
   }
 
@@ -86,7 +101,7 @@ export function OfferFormClient() {
               type="submit"
               className="w-full rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
-              {copy.offer.ctaButton}
+              {hasCheckout ? copy.offer.payButton : copy.offer.ctaButton}
             </button>
             <p className="text-center text-xs text-emerald-700 dark:text-emerald-300">
               {copy.offer.guarantee}

@@ -83,10 +83,14 @@ export const copy = {
     emailLabel: "Where should we send the details?",
     emailPlaceholder: "you@company.com",
     ctaButton: "Claim my spot",
+    payButton: "Pay $750 &mdash; secure my build slot",
     guarantee: "If it doesn't save you hours, you don't pay.",
     successHeading: "You're on the list!",
     successBody:
       "We'll email you within one business day with next steps and a short scoping call link.",
+    paySuccessHeading: "Payment received &mdash; let's build.",
+    paySuccessBody:
+      "Check your inbox for a receipt and a link to book your 30-minute scoping call. We start building the day after.",
     whatsIncludedHeading: "What you get",
     whatsIncluded: [
       "A custom AI agent built around your specific workflow",
