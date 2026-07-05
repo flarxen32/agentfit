@@ -67,6 +67,61 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run lint`     | Run ESLint                           |
 | `npm run typecheck`| Run TypeScript type checking (`tsc`) |
 
+## Architecture overview
+
+AgentFit is a single-page funnel:
+
+```
+Landing (hero + CTA)
+   → Audit flow (multi-step questionnaire, client-side state)
+   → Scoring engine (pure TS: classifier + ROI estimator)
+   → Report Card (fit score, top-3 tasks, savings viz, share)
+   → CTA → Bet #1 offer page (email capture)
+```
+
+**Scoring engine** (`lib/engine/`) — pure TypeScript functions, no side
+effects, fully unit-testable. `classifyTask()` maps audit answers to an
+automation category + feasibility score (0–100). `estimateRoi()` converts
+reported hours into monthly/annual savings and an ROI band.
+
+**Analytics** (`lib/analytics.ts`) — provider-agnostic `track()` function.
+Set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` and include the Plausible script in
+`layout.tsx` to enable event tracking. Events: `audit_started`,
+`step_completed`, `report_generated`, `cta_clicked`, `report_shared`,
+`email_captured`. In dev, events log to `console.debug`.
+
+**Copy** (`content/copy.ts`) — all user-facing strings in one file so the
+team can tune messaging without touching components.
+
+## Analytics setup (optional)
+
+Analytics is opt-in via [Plausible](https://plausible.dev/):
+
+1. Set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` in your `.env.local` (e.g.
+   `agentfit.vercel.app`).
+2. Uncomment the Plausible `<Script>` tag in `app/layout.tsx`.
+3. Deploy — events fire automatically from the `track()` calls in each
+   funnel step.
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | No | Plausible analytics domain |
+
+Copy `.env.example` to `.env.local` and fill in values.
+
+## Deployment
+
+Deploy to Vercel (free tier):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+1. Push the repo to GitHub.
+2. Import the project in Vercel.
+3. Add `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` if using analytics.
+4. Deploy.
+
 ## License
 
 [MIT](./LICENSE) — code. Report-card design assets are CC-BY (TBD).
