@@ -34,6 +34,27 @@ const guides = [
       "Custom AI agent vs part-time hire vs freelancer vs SaaS. Honest cost comparison with break-even analysis and a decision framework.",
     readTime: "6 min read",
   },
+  {
+    href: "/learn/ai-agents-for-consultants",
+    title: "AI Agents for Consultants: Automate the Busywork, Keep the Strategy",
+    description:
+      "How consultants use AI agents to automate client research, reporting, proposals, and follow-ups. Real workflows with before/after and ROI math.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/learn/ai-automation-roi",
+    title: "AI Automation ROI Calculator: How Much Could You Save?",
+    description:
+      "The framework and the numbers. Hours saved per task type, dollar value at different rates, and a worked example. Stop guessing — calculate.",
+    readTime: "5 min read",
+  },
+  {
+    href: "/learn/automate-email-triage-with-ai",
+    title: "How to Automate Email Triage with AI (2026 Guide)",
+    description:
+      "Email is the #1 time-sink. Step-by-step guide to sorting, prioritizing, and drafting email with an AI agent — without losing control.",
+    readTime: "7 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
