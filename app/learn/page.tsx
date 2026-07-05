@@ -62,6 +62,20 @@ const guides = [
       "Email is the #1 time-sink. Step-by-step guide to sorting, prioritizing, and drafting email with an AI agent — without losing control.",
     readTime: "7 min read",
   },
+  {
+    href: "/learn/ai-agent-examples",
+    title: "15 Real AI Agent Examples for Small Business (2026)",
+    description:
+      "Not theory — 15 concrete AI agent workflows that small businesses use right now. Each with exact tools, hours saved, and difficulty rating.",
+    readTime: "8 min read",
+  },
+  {
+    href: "/learn/best-ai-automation-tools",
+    title: "Best AI Automation Tools for Small Business (2026 Comparison)",
+    description:
+      "Honest comparison of 12 AI automation platforms — Zapier, Make, n8n, custom agents, and more. Pricing, pros, cons, and when to pick each.",
+    readTime: "9 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
