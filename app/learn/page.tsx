@@ -118,6 +118,27 @@ const guides = [
       "Solo founders wear every hat. Here are the 7 highest-impact tasks to automate — with real workflows, tool stacks, and hours saved.",
     readTime: "8 min read",
   },
+  {
+    href: "/learn/ai-automation-for-lead-generation",
+    title: "AI Automation for Lead Generation: Turn Cold Outreach Into a Machine",
+    description:
+      "How AI agents automate lead research, enrichment, personalization, and follow-up — so your pipeline fills itself. Real workflows and ROI math.",
+    readTime: "7 min read",
+  },
+  {
+    href: "/learn/ai-agent-vs-virtual-assistant",
+    title: "AI Agent vs Virtual Assistant: Which Actually Saves You More?",
+    description:
+      "Hiring a VA costs $800+/month. A custom AI agent costs $750 once. Honest comparison on cost, reliability, task coverage, and break-even.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/learn/automate-competitor-research-with-ai",
+    title: "Automate Competitor Research With AI: Always-On Market Intelligence",
+    description:
+      "Stop spending 3+ hours/week manually checking competitors. AI agents track pricing, features, reviews, and hiring signals 24/7.",
+    readTime: "6 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
