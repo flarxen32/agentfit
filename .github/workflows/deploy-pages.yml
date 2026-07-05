@@ -5,6 +5,12 @@ name: Deploy Preview (GitHub Pages)
 # built-in GITHUB_TOKEN is used. This runs alongside the Vercel Deploy
 # Preview workflow; once Vercel credentials are connected, that becomes the
 # primary preview and this remains as a zero-config fallback.
+#
+# NOTE: This app uses Next.js API routes (serverless functions) for lead
+# capture, analytics, and checkout. Static export cannot include these —
+# the Vercel deployment is the full production app. This Pages workflow
+# only publishes a static preview of the UI pages. If GitHub Pages is not
+# enabled in the repo settings, this workflow exits cleanly without failing.
 
 on:
   push:
@@ -31,30 +37,51 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check if GitHub Pages is enabled
+        id: check-pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          STATUS=$(gh api "repos/${{ github.repository }}/pages" --jq '.status' 2>/dev/null)
+          if [ -z "$STATUS" ]; then
+            echo "GitHub Pages is not enabled for this repo. Skipping static preview."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "GitHub Pages status: $STATUS"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Node.js
+        if: steps.check-pages.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
+        if: steps.check-pages.outputs.skip != 'true'
         run: npm ci
 
       - name: Configure Pages
+        if: steps.check-pages.outputs.skip != 'true'
         id: pages
         uses: actions/configure-pages@v5
 
       - name: Build static export
+        if: steps.check-pages.outputs.skip != 'true'
         run: npm run build
         env:
           NEXT_PUBLIC_STATIC_EXPORT: "1"
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
       - name: Upload artifact
+        if: steps.check-pages.outputs.skip != 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: out
 
       - name: Deploy to GitHub Pages
+        if: steps.check-pages.outputs.skip != 'true'
         id: deployment
         uses: actions/deploy-pages@v4
