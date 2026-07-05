@@ -120,7 +120,7 @@ export default function WhatTasksCanAIAutomatePage() {
           Don&apos;t want to read the whole list?
         </p>
         <p className="mt-1 text-sm text-indigo-700 dark:text-indigo-300">
-          Take the 60-second audit and we'll match the best automation to{" "}
+          Take the 60-second audit and we&apos;ll match the best automation to{" "}
           <em>your</em> specific role and tasks.
         </p>
         <Link

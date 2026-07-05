@@ -1,4 +1,3 @@
-import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getStripe, checkoutUrls } from "@/lib/stripe";
 import productConfig from "@/product.config.json";
