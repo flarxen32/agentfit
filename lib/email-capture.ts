@@ -1,21 +1,26 @@
-import { mkdirSync, appendFileSync, existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { Redis } from "@upstash/redis";
 
 /**
  * Email capture persistence for the Report Card ("Email me my report").
  *
- * Submissions are appended to a JSONL file (data/email-captures.jsonl).
- * JSONL = one JSON object per line, append-only, durable across restarts
- * and deploys. Intentionally simple — no DB, no migration, easy to grep/export.
+ * Leads are stored in Vercel KV (Upstash Redis) so they persist across cold
+ * starts and deploys. Every captured email is a warm lead for the outbound
+ * list (XRO-10).
  *
- * This feeds the Bet #1 outbound list (XRO-10): every capture is a warm lead
- * who has already seen their fit score and opted in for the report.
+ * Each lead is stored as a JSON string under two keys:
+ *   - lead:{id}            → the full lead object
+ *   - lead_index           → a sorted set scored by timestamp for ordering
  *
- * Each line: { id, capturedAt, email, fitScore, grade, role, task, tools, source }
+ * Schema: { id, capturedAt, email, fitScore, grade, role, task, tools, source }
  */
 
-const DATA_DIR = join(process.cwd(), "data");
-const FILE = join(DATA_DIR, "email-captures.jsonl");
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL as string,
+  token: process.env.KV_REST_API_TOKEN as string,
+});
+
+const LEAD_PREFIX = "lead:";
+const LEAD_INDEX = "lead_index";
 
 export interface EmailCapture {
   id: string;
@@ -34,36 +39,38 @@ export interface EmailCapture {
   source: string;
 }
 
-/**
- * Append a capture to the JSONL store. Creates the dir/file if needed.
- *
- * On read-only filesystems (Vercel serverless), falls back to structured
- * console logging so captures are visible in Vercel logs and the user still
- * sees a success response. The capture is never silently lost.
- */
-export function appendEmailCapture(capture: EmailCapture): void {
-  try {
-    mkdirSync(DATA_DIR, { recursive: true });
-    appendFileSync(FILE, JSON.stringify(capture) + "\n", "utf8");
-  } catch {
-    // Serverless environments (Vercel) have read-only filesystems.
-    // Log the capture so it appears in Vercel runtime logs and can be
-    // collected/exported from the observability dashboard.
-    console.log("email_capture", JSON.stringify(capture));
-  }
+/** Check whether KV is configured (env vars present). */
+export function isKVConfigured(): boolean {
+  return Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 }
 
-/** Read all captures (for export to the outbound list). */
-export function readEmailCaptures(): EmailCapture[] {
-  if (!existsSync(FILE)) return [];
-  const raw = readFileSync(FILE, "utf8");
-  return raw
-    .split("\n")
-    .filter((line) => line.trim().length > 0)
-    .map((line) => JSON.parse(line) as EmailCapture);
+/**
+ * Append a capture to Vercel KV.
+ *
+ * Stores the lead as a JSON hash and adds it to a timestamp-ordered index
+ * so /api/leads can return them newest-first.
+ */
+export async function appendEmailCapture(capture: EmailCapture): Promise<void> {
+  const score = new Date(capture.capturedAt).getTime();
+  await Promise.all([
+    redis.set(`${LEAD_PREFIX}${capture.id}`, capture),
+    redis.zadd(LEAD_INDEX, { score, member: capture.id }),
+  ]);
+}
+
+/** Read all captures (for /api/leads export), newest-first. */
+export async function readEmailCaptures(limit = 200): Promise<EmailCapture[]> {
+  // Get the newest `limit` member IDs from the sorted set (descending)
+  const ids = await redis.zrange(LEAD_INDEX, 0, limit - 1, { rev: true });
+  if (!ids || ids.length === 0) return [];
+
+  const keys = (ids as string[]).map((id) => `${LEAD_PREFIX}${id}`);
+  const records = await redis.mget<EmailCapture[]>(...keys);
+
+  return records.filter((r): r is EmailCapture => r !== null);
 }
 
 /** Count captures without exposing PII (lightweight metric). */
-export function countEmailCaptures(): number {
-  return readEmailCaptures().length;
+export async function countEmailCaptures(): Promise<number> {
+  return redis.zcard(LEAD_INDEX);
 }

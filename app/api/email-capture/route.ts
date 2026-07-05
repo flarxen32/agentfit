@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   };
 
   try {
-    appendEmailCapture(capture);
+    await appendEmailCapture(capture);
   } catch (err) {
     console.error("email_capture_failed", {
       error: err instanceof Error ? err.message : String(err),
