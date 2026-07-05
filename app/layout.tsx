@@ -13,10 +13,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://agentfit-mu.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "AgentFit — Free AI Automation Audit",
   description:
-    "Find out what an AI agent should do for your business — free, in 60 seconds.",
+    "Find out what an AI agent should do for your business — free, in 60 seconds. Get a personalized score, top automation opportunities, and ROI estimate.",
+  openGraph: {
+    title: "AgentFit — Free AI Automation Audit",
+    description:
+      "Find out what an AI agent should do for your business — free, in 60 seconds.",
+    url: SITE_URL,
+    siteName: "AgentFit",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AgentFit — Free AI Automation Audit",
+    description:
+      "Find out what an AI agent should do for your business — free, in 60 seconds.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 /**
