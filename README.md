@@ -128,35 +128,35 @@ Copy `.env.example` to `.env.local` and fill in values.
 
 ## Deployment & preview
 
-There are two preview-deploy paths, both wired and ready:
+**Live:** [https://agentfit-mu.vercel.app](https://agentfit-mu.vercel.app)
 
-### Option A — Vercel (primary, recommended)
-
-The project is configured for Vercel via `vercel.json` and the
-`.github/workflows/deploy.yml` workflow (posts the preview URL as a PR comment).
+The project is deployed on [Vercel](https://vercel.com/) (free tier). The
+GitHub repo ([flarxen32/agentfit](https://github.com/flarxen32/agentfit)) is
+connected to Vercel, so every push to `main` auto-deploys to production and
+every PR gets its own preview URL commented on the PR.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-1. Import `flarxen32/agentfit` at [vercel.com/new](https://vercel.com/new) —
-   the GitHub integration auto-deploys on every push (no token needed).
-2. Add `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` if using analytics.
-3. Each push/PR gets a live preview URL.
+### Vercel CI deploy workflow
 
-Alternatively, add repo secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
-`VERCEL_PROJECT_ID` to let the deploy workflow run headlessly.
+`.github/workflows/deploy.yml` can also deploy headlessly (e.g. for preview
+URLs in PRs from CI). Add these repo secrets to enable it:
 
-### Option B — GitHub Pages (zero-credential fallback)
+| Secret | Where to find it |
+|--------|-----------------|
+| `VERCEL_TOKEN` | Vercel → Settings → Tokens |
+| `VERCEL_ORG_ID` | Vercel → Settings → General (team ID) |
+| `VERCEL_PROJECT_ID` | Vercel → Project Settings → General (project ID) |
 
-A static-export build (`.github/workflows/deploy-pages.yml`) publishes to
-GitHub Pages using only the built-in `GITHUB_TOKEN`. This is the same app
-minus the `/api/score` health endpoint (which renders as static JSON).
+Without these secrets, the workflow skips cleanly — the Vercel-GitHub
+integration still auto-deploys on push.
 
-**One-time enable** (requires repo admin via browser or a token with Pages
-permission — cannot be done by a fine-grained PAT):
-Settings → Pages → Build and deployment → Source = **GitHub Actions**.
+### GitHub Pages fallback (optional)
 
-Once enabled, every push to `main` deploys to
-`https://flarxen32.github.io/agentfit/`.
+A static-export build path exists in `.github/workflows/deploy-pages.yml` for
+environments where Vercel is unavailable. It requires the repo's Pages setting
+to be enabled first (Settings → Pages → Source = **GitHub Actions**), which
+needs a token with the "Pages" repository permission.
 
 ## License
 
