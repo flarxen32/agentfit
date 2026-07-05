@@ -85,8 +85,8 @@ export default function AIAgentCostVsHiringPage() {
         AI Agent Cost vs Hiring: The Real Math
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
-        If you're deciding between automating a task, hiring someone, or
-        outsourcing it — here's the honest comparison. No hype, just numbers.
+        If you&apos;re deciding between automating a task, hiring someone, or
+        outsourcing it — here&apos;s the honest comparison. No hype, just numbers.
       </p>
 
       <section className="mt-12">
@@ -158,7 +158,7 @@ export default function AIAgentCostVsHiringPage() {
         </h2>
         <p className="mt-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
           Say you spend 8 hours/week on a task that a custom agent could handle.
-          Here's when each option breaks even:
+          Here&apos;s when each option breaks even:
         </p>
         <div className="mt-6 space-y-4">
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-900 dark:bg-emerald-950">
@@ -177,7 +177,7 @@ export default function AIAgentCostVsHiringPage() {
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               Break-even: <strong>never</strong> for a single task. A $30k/yr hire
               only makes sense if they handle <em>many</em> tasks, not one repetitive
-              one. You'd need 500+ hours saved per year just to break even on salary
+              one. You&apos;d need 500+ hours saved per year just to break even on salary
               alone.
             </p>
           </div>
@@ -198,7 +198,7 @@ export default function AIAgentCostVsHiringPage() {
           When NOT to use an AI agent
         </h2>
         <p className="mt-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
-          AI agents aren't the answer to everything. Here's when hiring a human
+          AI agents aren&apos;t the answer to everything. Here&apos;s when hiring a human
           is the right call:
         </p>
         <ul className="mt-4 space-y-3">
@@ -234,16 +234,16 @@ export default function AIAgentCostVsHiringPage() {
               <p className="text-sm text-zinc-600 dark:text-zinc-400">Yes → AI agent is worth evaluating. No → hire.</p>
             </li>
             <li>
-              <strong className="text-zinc-900 dark:text-zinc-50">Can you describe the "done" state clearly?</strong>
+              <strong className="text-zinc-900 dark:text-zinc-50">Can you describe the &quot;done&quot; state clearly?</strong>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">Yes → an agent can hit it. Vague → hard to automate.</p>
             </li>
             <li>
               <strong className="text-zinc-900 dark:text-zinc-50">Does it eat 3+ hours/week?</strong>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">Yes → the ROI is there. Under that, it's not worth the setup.</p>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">Yes → the ROI is there. Under that, it&apos;s not worth the setup.</p>
             </li>
             <li>
               <strong className="text-zinc-900 dark:text-zinc-50">Do the tools involved have APIs?</strong>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">Most modern tools do. If you're on legacy systems, check first.</p>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">Most modern tools do. If you&apos;re on legacy systems, check first.</p>
             </li>
           </ol>
         </div>

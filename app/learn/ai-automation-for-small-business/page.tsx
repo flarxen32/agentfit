@@ -75,7 +75,7 @@ export default function AIAutomationSmallBusinessPage() {
         AI Automation for Small Business: Where to Start in 2026
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
-        Most small business owners know AI can help — but don't know which task to
+        Most small business owners know AI can help — but don&apos;t know which task to
         automate first. This guide cuts through the noise.
       </p>
 
@@ -101,7 +101,7 @@ export default function AIAutomationSmallBusinessPage() {
         </h2>
         <p className="mt-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
           They try to automate everything at once. Or worse — they buy a generic
-          AI tool, use it twice, and abandon it because it doesn't fit their actual
+          AI tool, use it twice, and abandon it because it doesn&apos;t fit their actual
           workflow.
         </p>
         <p className="mt-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">

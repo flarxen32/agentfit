@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "Is the audit really free?",
-    a: "Yes. The full audit — including your score, top opportunities, savings estimate, and report card — is 100% free. No signup wall, no credit card. If you want us to build a custom AI agent based on your results, that's a separate $750 offer you can choose after seeing your report.",
+    a: "Yes. The full audit — including your score, top opportunities, savings estimate, and report card — is 100% free. No signup wall, no credit card. If you want us to build a custom AI agent based on your results, that&apos;s a separate $750 offer you can choose after seeing your report.",
   },
   {
     q: "How long does the audit take?",
@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: "What is a custom AI agent build?",
-    a: "We build a dedicated AI agent that automates the top task identified in your audit. It integrates with your existing tools, runs on your schedule, and is deployed in 7 days. If it doesn't save you hours within the first month, you don't pay.",
+    a: "We build a dedicated AI agent that automates the top task identified in your audit. It integrates with your existing tools, runs on your schedule, and is deployed in 7 days. If it doesn&apos;t save you hours within the first month, you don&apos;t pay.",
   },
   {
     q: "Who is AgentFit for?",
@@ -129,7 +129,7 @@ export default function HowItWorksPage() {
           Ready to find out what AI can do for you?
         </h2>
         <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-          It's free and takes 60 seconds.
+          It&apos;s free and takes 60 seconds.
         </p>
         <Link
           href="/"

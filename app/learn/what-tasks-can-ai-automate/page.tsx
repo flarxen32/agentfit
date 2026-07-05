@@ -110,14 +110,14 @@ export default function WhatTasksCanAIAutomatePage() {
         What Tasks Can AI Automate? 30+ Real Examples
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
-        Not sure what AI can actually do for your business? Here's a practical
+        Not sure what AI can actually do for your business? Here&apos;s a practical
         list — ranked by category, with difficulty levels and estimated hours
         saved. Every example is buildable today.
       </p>
 
       <div className="mt-8 rounded-xl border border-indigo-200 bg-indigo-50 p-6 dark:border-indigo-900 dark:bg-indigo-950">
         <p className="text-sm font-medium text-indigo-900 dark:text-indigo-100">
-          Don't want to read the whole list?
+          Don&apos;t want to read the whole list?
         </p>
         <p className="mt-1 text-sm text-indigo-700 dark:text-indigo-300">
           Take the 60-second audit and we'll match the best automation to{" "}
