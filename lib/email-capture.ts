@@ -34,10 +34,23 @@ export interface EmailCapture {
   source: string;
 }
 
-/** Append a capture to the JSONL store. Creates the dir/file if needed. */
+/**
+ * Append a capture to the JSONL store. Creates the dir/file if needed.
+ *
+ * On read-only filesystems (Vercel serverless), falls back to structured
+ * console logging so captures are visible in Vercel logs and the user still
+ * sees a success response. The capture is never silently lost.
+ */
 export function appendEmailCapture(capture: EmailCapture): void {
-  mkdirSync(DATA_DIR, { recursive: true });
-  appendFileSync(FILE, JSON.stringify(capture) + "\n", "utf8");
+  try {
+    mkdirSync(DATA_DIR, { recursive: true });
+    appendFileSync(FILE, JSON.stringify(capture) + "\n", "utf8");
+  } catch {
+    // Serverless environments (Vercel) have read-only filesystems.
+    // Log the capture so it appears in Vercel runtime logs and can be
+    // collected/exported from the observability dashboard.
+    console.log("email_capture", JSON.stringify(capture));
+  }
 }
 
 /** Read all captures (for export to the outbound list). */

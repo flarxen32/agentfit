@@ -126,16 +126,37 @@ In dev (`NODE_ENV=development`), events log to `console.debug`.
 
 Copy `.env.example` to `.env.local` and fill in values.
 
-## Deployment
+## Deployment & preview
 
-Deploy to Vercel (free tier):
+**Live:** [https://agentfit-mu.vercel.app](https://agentfit-mu.vercel.app)
+
+The project is deployed on [Vercel](https://vercel.com/) (free tier). The
+GitHub repo ([flarxen32/agentfit](https://github.com/flarxen32/agentfit)) is
+connected to Vercel, so every push to `main` auto-deploys to production and
+every PR gets its own preview URL commented on the PR.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-1. Push the repo to GitHub.
-2. Import the project in Vercel.
-3. Add `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` if using analytics.
-4. Deploy.
+### Vercel CI deploy workflow
+
+`.github/workflows/deploy.yml` can also deploy headlessly (e.g. for preview
+URLs in PRs from CI). Add these repo secrets to enable it:
+
+| Secret | Where to find it |
+|--------|-----------------|
+| `VERCEL_TOKEN` | Vercel → Settings → Tokens |
+| `VERCEL_ORG_ID` | Vercel → Settings → General (team ID) |
+| `VERCEL_PROJECT_ID` | Vercel → Project Settings → General (project ID) |
+
+Without these secrets, the workflow skips cleanly — the Vercel-GitHub
+integration still auto-deploys on push.
+
+### GitHub Pages fallback (optional)
+
+A static-export build path exists in `.github/workflows/deploy-pages.yml` for
+environments where Vercel is unavailable. It requires the repo's Pages setting
+to be enabled first (Settings → Pages → Source = **GitHub Actions**), which
+needs a token with the "Pages" repository permission.
 
 ## License
 

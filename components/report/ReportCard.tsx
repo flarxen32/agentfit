@@ -35,19 +35,19 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
     track("report_generated", { fitScore: score.fitScore, grade: score.grade });
   }, [score]);
 
-  // Build the Bet #1 offer URL with audit data pre-filled into the intake form.
-  // The offer page (XRO-11) reads these query params to pre-populate its fields.
+  // Relative link to the /offer page (same origin as the report). Using a
+  // relative path keeps the link correct in every environment — localhost,
+  // preview deploys, and production — without an env var. The previous code
+  // baked `http://localhost:3001` into the production build when
+  // NEXT_PUBLIC_OFFER_URL was unset, and pointed at "/" instead of "/offer".
   const offerUrl = useMemo(() => {
-    const base =
-      process.env.NEXT_PUBLIC_OFFER_URL || "http://localhost:3001";
     const params = new URLSearchParams({
       role: input.role,
-      task: input.taskDescription,
-      tools: input.tools.join(", "),
-      source: "agentfit-report",
+      fitScore: String(score.fitScore),
+      annualSavings: String(score.estimatedAnnualSavings),
     });
-    return `${base}/?${params.toString()}`;
-  }, [input]);
+    return `/offer?${params.toString()}`;
+  }, [input, score.fitScore, score.estimatedAnnualSavings]);
 
   return (
     <article className="mx-auto w-full max-w-2xl">
