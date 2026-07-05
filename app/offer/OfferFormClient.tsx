@@ -97,7 +97,7 @@ export function OfferFormClient() {
             tools,
             industry,
             grade: "",
-            source: "agentfit-report-card",
+            source: "offer_page_checkout_fallback",
           }),
         });
         track("email_captured", { source: "offer_page_fallback", role, fitScore, annualSavings });
