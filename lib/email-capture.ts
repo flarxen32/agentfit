@@ -76,12 +76,48 @@ export function isKVConfigured(): boolean {
 
  /**
   * Send a webhook notification about a new hot lead.
-  * Uses Discord/Slack-compatible webhook URL if configured via env.
+  *
+  * Supports two formats, auto-detected from the LEAD_WEBHOOK_URL:
+  *  - ntfy.sh URLs (https://ntfy.sh/...): sends a push notification with
+  *    Title/Tags headers and a plain-text body. Subscribe to the topic via
+  *    the ntfy app or https://ntfy.sh/<topic> to receive instant alerts.
+  *  - Other URLs (Discord/Slack-compatible): sends a JSON embed payload.
   */
  async function notifyNewLead(capture: EmailCapture): Promise<void> {
    const webhookUrl = process.env.LEAD_WEBHOOK_URL;
    if (!webhookUrl) return;
 
+   const isNtfy = webhookUrl.includes("ntfy.sh");
+
+   if (isNtfy) {
+     // ntfy.sh: plain-text body + headers for title, tags, priority, click URL
+     const body = [
+       `🔥 New AgentFit Lead (FitScore: ${capture.fitScore}/100)`,
+       ``,
+       `Email: ${capture.email}`,
+       `Role: ${capture.role || "—"}`,
+       `Industry: ${capture.industry || "—"}`,
+       `Top task: ${capture.task || "—"}`,
+       `Tools: ${capture.tools || "—"}`,
+       `Hours/wk: ${capture.hoursPerWeek || "—"}`,
+       ``,
+       `Follow up now → response rates drop 60x after 24h`,
+     ].join("\n");
+
+     await fetch(webhookUrl, {
+       method: "POST",
+       headers: {
+         Title: `🔥 Lead: ${capture.email} (FitScore ${capture.fitScore})`,
+         Tags: "bell,money,lead",
+         Priority: capture.fitScore >= 70 ? "high" : "default",
+         Click: "https://agentfit-mu.vercel.app/offer",
+       },
+       body,
+     });
+     return;
+   }
+
+   // Discord/Slack-compatible JSON embed
    const message = {
      content: `🔥 **New AgentFit Lead** (FitScore: ${capture.fitScore}/100)`,
      embeds: [
