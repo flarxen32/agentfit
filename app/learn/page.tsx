@@ -76,6 +76,20 @@ const guides = [
       "Honest comparison of 12 AI automation platforms — Zapier, Make, n8n, custom agents, and more. Pricing, pros, cons, and when to pick each.",
     readTime: "9 min read",
   },
+  {
+    href: "/learn/ai-automation-for-agencies",
+    title: "AI Automation for Agencies: 7 Workflows That Recover Billable Hours",
+    description:
+      "How agencies use AI agents to automate reporting, research, QA, and client comms. Before/after with recovered-hours math for each workflow.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/learn/chatgpt-vs-custom-ai-agent",
+    title: "ChatGPT vs Custom AI Agent: Which Actually Saves You Time?",
+    description:
+      "The honest comparison: when ChatGPT is enough, when you need a custom agent, and the cost/effort math for each.",
+    readTime: "5 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
