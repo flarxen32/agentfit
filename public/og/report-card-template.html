@@ -1,0 +1,144 @@
+<!--
+  AgentFit — Social Share Card Template (OG image)
+
+  This is a static HTML template for the Open Graph / Twitter Card image
+  shown when someone shares an AgentFit Report Card link. It renders a
+  1200×630 preview with the brand, score headline, and CTA.
+
+  Usage:
+    - As a reference for a dynamic OG image route (e.g. app/report/opengraph-image.tsx
+      using next/og ImageResponse) — values shown are placeholders.
+    - As a static fallback at public/og/report-card.png (screenshot this file).
+
+  Replace {{SCORE}}, {{GRADE}}, and {{HOURS}} with the visitor's values for
+  a personalized card.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentFit Report Card — OG Template</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1200px;
+      height: 630px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #ededed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .card {
+      width: 1080px;
+      height: 510px;
+      background: linear-gradient(135deg, #111118 0%, #1e1e3f 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 32px;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 100px;
+      width: fit-content;
+    }
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+    .grade-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 8px solid #10b981;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .grade-letter {
+      font-size: 72px;
+      font-weight: 800;
+      color: #10b981;
+      line-height: 1;
+    }
+    .score-number {
+      font-size: 24px;
+      color: #a0a0b0;
+      margin-top: 4px;
+    }
+    .headline {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+    .headline .highlight {
+      color: #10b981;
+    }
+    .meta {
+      display: flex;
+      gap: 40px;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .stat-label {
+      font-size: 16px;
+      color: #8888a0;
+      margin-top: 4px;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 600;
+      color: #8888a0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Free AI Automation Audit</span>
+
+    <div class="score-row">
+      <div class="grade-circle">
+        <span class="grade-letter">{{GRADE}}</span>
+        <span class="score-number">{{SCORE}}/100</span>
+      </div>
+      <h1 class="headline">
+        My Automation Fit is<br />
+        <span class="highlight">{{SCORE}}/100</span>
+      </h1>
+    </div>
+
+    <div class="meta">
+      <div class="stat">
+        <span class="stat-value">{{HOURS}}h/mo</span>
+        <span class="stat-label">reclaimed by an AI agent</span>
+      </div>
+      <span class="brand">AgentFit</span>
+    </div>
+  </div>
+</body>
+</html>

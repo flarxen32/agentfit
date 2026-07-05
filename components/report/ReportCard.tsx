@@ -45,7 +45,6 @@ export function ReportCard({ input, hourlyRate = 50 }: ReportCardProps) {
           <ScoreGauge
             score={score.fitScore}
             grade={score.grade}
-            gradeLabel={score.gradeLabel}
           />
         </div>
         <p className="mt-4 text-lg font-medium text-zinc-700 dark:text-zinc-300">
