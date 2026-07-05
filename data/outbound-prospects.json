@@ -1,0 +1,182 @@
+[
+  {
+    "id": "prospect_001",
+    "email": "jon@bannerbear.com",
+    "name": "Jon Yongfook Cockle",
+    "company": "Bannerbear",
+    "role": "Solo Founder",
+    "task": "support ticket triage",
+    "hook": "Saw your $50K MRR solo-founder story on Indie Hackers \u2014 genuinely impressive."
+  },
+  {
+    "id": "prospect_002",
+    "email": "alex@unicornplatform.com",
+    "name": "Alexander Isora",
+    "company": "Unicorn Platform",
+    "role": "Solo Founder",
+    "task": "changelog + onboarding emails",
+    "hook": "Followed your $0 to $10K MRR solo journey."
+  },
+  {
+    "id": "prospect_003",
+    "email": "arvid@arvidkahl.com",
+    "name": "Arvid Kahl",
+    "company": "The Bootstrapped Founder",
+    "role": "Founder",
+    "task": "podcast-to-blog repurposing",
+    "hook": "Been following The Bootstrapped Founder \u2014 your content engine is remarkable."
+  },
+  {
+    "id": "prospect_004",
+    "email": "hello@cadacreative.com",
+    "name": "Caitlin Dalziel Cada",
+    "company": "Cada Creative",
+    "role": "Agency Owner",
+    "task": "social media content calendars",
+    "hook": "Love the work Cada Creative is doing for service-business clients."
+  },
+  {
+    "id": "prospect_005",
+    "email": "ben@benjowen.com",
+    "name": "Ben Jowen",
+    "company": "benjowen.com",
+    "role": "Consultant",
+    "task": "first-draft landing page copy",
+    "hook": "Saw your consulting site \u2014 the kind of hands-on operator work we love to help automate."
+  },
+  {
+    "id": "prospect_006",
+    "email": "kelly@kellyrohrscpa.com",
+    "name": "Kelly Rohrs",
+    "company": "Kelly Rohrs CPA",
+    "role": "CPA / Owner",
+    "task": "monthly client financial summaries",
+    "hook": "Running a solo CPA practice means you are the entire client comms team."
+  },
+  {
+    "id": "prospect_007",
+    "email": "mario@mariocastrocpa.com",
+    "name": "Mario Castro",
+    "company": "Mario Castro CPA",
+    "role": "CPA / Owner",
+    "task": "engagement letters + onboarding docs",
+    "hook": "Solo CPA practice \u2014 onboarding docs and engagement letters are the classic time-sink."
+  },
+  {
+    "id": "prospect_008",
+    "email": "kyle@kylehandy.com",
+    "name": "Kyle Handy",
+    "company": "eXp Realty",
+    "role": "Real Estate Coach",
+    "task": "listing descriptions + drip emails",
+    "hook": "Your real estate coaching content reaches a lot of agents."
+  },
+  {
+    "id": "prospect_009",
+    "email": "joe@joekillinger.com",
+    "name": "Joe Killinger",
+    "company": "joekillinger.com",
+    "role": "Real Estate Pro",
+    "task": "lead follow-up sequences",
+    "hook": "Real estate at scale is a follow-up game."
+  },
+  {
+    "id": "prospect_010",
+    "email": "contact@paperboxseo.com",
+    "name": "Paper Box SEO",
+    "company": "Paper Box SEO",
+    "role": "SEO Agency",
+    "task": "monthly SEO content briefs + reports",
+    "hook": "SEO agencies live and die by monthly reporting cycles."
+  },
+  {
+    "id": "prospect_011",
+    "email": "claire@clairebahngroup.com",
+    "name": "Claire Bahn",
+    "company": "Claire Bahn Group",
+    "role": "PR Agency Owner",
+    "task": "media pitch emails",
+    "hook": "PR is a volume game \u2014 pitch emails at scale."
+  },
+  {
+    "id": "prospect_012",
+    "email": "hello@shinepr.com",
+    "name": "ShinePR",
+    "company": "ShinePR",
+    "role": "PR Agency",
+    "task": "weekly media-monitoring clip reports",
+    "hook": "Media monitoring reports are the definition of repetitive high-value work."
+  },
+  {
+    "id": "prospect_013",
+    "email": "info@avaans.com",
+    "name": "Avaans Media",
+    "company": "Avaans Media",
+    "role": "PR Agency",
+    "task": "pitch lists + follow-up sequences",
+    "hook": "Pitch list building and follow-up are the backbone of PR."
+  },
+  {
+    "id": "prospect_014",
+    "email": "hello@zajno.com",
+    "name": "Zajno Digital Studio",
+    "company": "Zajno Digital Studio",
+    "role": "Digital Agency",
+    "task": "project proposals + scoping questionnaires",
+    "hook": "Agency proposals and scoping docs are the classic bottleneck."
+  },
+  {
+    "id": "prospect_015",
+    "email": "info@baxconsulting.com",
+    "name": "Bax Consulting",
+    "company": "Bax Consulting",
+    "role": "Consultant",
+    "task": "client discovery summaries",
+    "hook": "Discovery call summaries are the kind of work that should run itself."
+  },
+  {
+    "id": "prospect_016",
+    "email": "info@pushkinpr.com",
+    "name": "Pushkin PR",
+    "company": "Pushkin PR",
+    "role": "PR Agency",
+    "task": "monthly client activity reports",
+    "hook": "Monthly client reports are the exact repetitive task agents excel at."
+  },
+  {
+    "id": "prospect_017",
+    "email": "hello@digiceptual.com",
+    "name": "Digiceptual",
+    "company": "Digiceptual",
+    "role": "Digital Agency",
+    "task": "lead-gen outreach lists",
+    "hook": "Building lead-gen lists at scale is pure agent territory."
+  },
+  {
+    "id": "prospect_018",
+    "email": "hello@socialrevelation.com",
+    "name": "Social Revelation",
+    "company": "Social Revelation",
+    "role": "Social Media Agency",
+    "task": "weekly social content calendars",
+    "hook": "Weekly content calendars are the bread and butter of social agencies."
+  },
+  {
+    "id": "prospect_019",
+    "email": "info@chartwellrealty.com",
+    "name": "Chartwell Realty",
+    "company": "Chartwell Realty",
+    "role": "Real Estate Brokerage",
+    "task": "agent onboarding packets",
+    "hook": "Agent onboarding packets are high-volume, templated, and perfect for automation."
+  },
+  {
+    "id": "prospect_020",
+    "email": "hello@flowagency.de",
+    "name": "Flow Agency",
+    "company": "Flow Agency",
+    "role": "SEO Agency",
+    "task": "monthly SEO performance decks",
+    "hook": "Monthly SEO performance decks are exactly the kind of thing an agent can build and update."
+  }
+]
