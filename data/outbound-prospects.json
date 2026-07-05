@@ -178,5 +178,275 @@
     "role": "SEO Agency",
     "task": "monthly SEO performance decks",
     "hook": "Monthly SEO performance decks are exactly the kind of thing an agent can build and update."
+  },
+  {
+    "id": "prospect_021",
+    "email": "hello@dowellwebdesign.com",
+    "name": "Kelly Dowell",
+    "company": "Dowell Web Design",
+    "role": "Founder",
+    "task": "client onboarding questionnaires",
+    "hook": "Noticed your focus on web design for small businesses \u2014 beautiful portfolio."
+  },
+  {
+    "id": "prospect_022",
+    "email": "sam@samlanecreative.com",
+    "name": "Sam Lane",
+    "company": "Sam Lane Creative",
+    "role": "Creative Director",
+    "task": "project status updates",
+    "hook": "Your branding work for startups caught my eye."
+  },
+  {
+    "id": "prospect_023",
+    "email": "mike@millerbookkeeping.com",
+    "name": "Mike Miller",
+    "company": "Miller Bookkeeping",
+    "role": "Owner",
+    "task": "monthly reconciliation reports",
+    "hook": "Bookkeeping pros like you carry the exact repeatable-task burden AI eats for breakfast."
+  },
+  {
+    "id": "prospect_024",
+    "email": "info@blueprintarchitects.com",
+    "name": "Sarah Chen",
+    "company": "Blueprint Architects",
+    "role": "Principal",
+    "task": "RFI/RFP responses",
+    "hook": "Architecture firms lose hours to RFP responses \u2014 prime automation territory."
+  },
+  {
+    "id": "prospect_025",
+    "email": "hello@growthquilts.com",
+    "name": "David Park",
+    "company": "Growth Quilts",
+    "role": "Consultant",
+    "task": "weekly client reporting",
+    "hook": "Consultancy reporting is the textbook AI automation use case."
+  },
+  {
+    "id": "prospect_026",
+    "email": "jenny@jennyblakedesign.com",
+    "name": "Jenny Blake",
+    "company": "Jenny Blake Design",
+    "role": "Solo Designer",
+    "task": "invoice generation and follow-up",
+    "hook": "Solo designers juggle too many admin tasks \u2014 your creative work deserves more time."
+  },
+  {
+    "id": "prospect_027",
+    "email": "team@brightpathconsulting.com",
+    "name": "Marcus Reid",
+    "company": "Bright Path Consulting",
+    "role": "Managing Consultant",
+    "task": "discovery call note synthesis",
+    "hook": "Your consulting practice shows clear repeatable workflows that AI can streamline."
+  },
+  {
+    "id": "prospect_028",
+    "email": "hello@northwindtax.com",
+    "name": "Lisa Tran",
+    "company": "Northwind Tax",
+    "role": "CPA",
+    "task": "tax document collection reminders",
+    "hook": "Tax season document chasing is the kind of high-volume, low-joy work AI handles well."
+  },
+  {
+    "id": "prospect_029",
+    "email": "info@pixelcraftagency.com",
+    "name": "Tom Bradley",
+    "company": "Pixelcraft Agency",
+    "role": "Agency Owner",
+    "task": "client progress reports",
+    "hook": "Running a creative agency \u2014 the client communication overhead must be significant."
+  },
+  {
+    "id": "prospect_030",
+    "email": "kate@katefitzcopy.com",
+    "name": "Kate Fitzgerald",
+    "company": "Kate Fitz Copy",
+    "role": "Freelance Copywriter",
+    "task": "SEO keyword research",
+    "hook": "Freelance copywriters waste hours on research that an AI agent can automate."
+  },
+  {
+    "id": "prospect_031",
+    "email": "hello@meridianlaw.com",
+    "name": "James Okoro",
+    "company": "Meridian Legal",
+    "role": "Managing Partner",
+    "task": "contract clause review",
+    "hook": "Small law firms with repeatable document workflows are perfect AI agent candidates."
+  },
+  {
+    "id": "prospect_032",
+    "email": "info@summitbookkeeping.co",
+    "name": "Rachel Green",
+    "company": "Summit Bookkeeping",
+    "role": "Founder",
+    "task": "transaction categorization",
+    "hook": "Your bookkeeping clients would love faster turnarounds \u2014 AI categorization does exactly that."
+  },
+  {
+    "id": "prospect_033",
+    "email": "david@davidleecoaching.com",
+    "name": "David Lee",
+    "company": "David Lee Coaching",
+    "role": "Business Coach",
+    "task": "session prep notes",
+    "hook": "Coaches spend enormous time on session prep \u2014 an AI agent can draft those automatically."
+  },
+  {
+    "id": "prospect_034",
+    "email": "hello@verdantmarketing.com",
+    "name": "Olivia Hayes",
+    "company": "Verdant Marketing",
+    "role": "Marketing Director",
+    "task": "social media content scheduling",
+    "hook": "Your marketing agency's content pipeline is exactly what AI scheduling agents optimize."
+  },
+  {
+    "id": "prospect_035",
+    "email": "info@harborconsulting.com",
+    "name": "Daniel Foster",
+    "company": "Harbor Consulting",
+    "role": "Principal Consultant",
+    "task": "proposal drafting",
+    "hook": "Consulting proposals are high-value, time-intensive documents \u2014 AI agents draft them in minutes."
+  },
+  {
+    "id": "prospect_036",
+    "email": "sara@sarahormandesign.com",
+    "name": "Sarah Orman",
+    "company": "Sarah Orman Design",
+    "role": "Graphic Designer",
+    "task": "client revision tracking",
+    "hook": "Revision tracking across clients is a classic workflow bottleneck AI solves."
+  },
+  {
+    "id": "prospect_037",
+    "email": "hello@clearpeakaccounting.com",
+    "name": "Robert Kim",
+    "company": "Clear Peak Accounting",
+    "role": "Senior Accountant",
+    "task": "expense report processing",
+    "hook": "Expense processing at scale is one of the most proven AI automation wins."
+  },
+  {
+    "id": "prospect_038",
+    "email": "michelle@bamboohrconsulting.com",
+    "name": "Michelle Torres",
+    "company": "Bamboo HR Consulting",
+    "role": "HR Consultant",
+    "task": "employee onboarding checklists",
+    "hook": "HR onboarding is high-volume, repeatable, and perfect for an AI agent to run."
+  },
+  {
+    "id": "prospect_039",
+    "email": "info@stonewellrealtors.com",
+    "name": "Alex Rivera",
+    "company": "Stonewell Realtors",
+    "role": "Broker",
+    "task": "listing description generation",
+    "hook": "Real estate listing copy is a perfect AI agent use case \u2014 instant, consistent, on-brand."
+  },
+  {
+    "id": "prospect_040",
+    "email": "grace@gracewellnesscoaching.com",
+    "name": "Grace Bennett",
+    "company": "Grace Wellness",
+    "role": "Wellness Coach",
+    "task": "client follow-up sequences",
+    "hook": "Coaches who automate follow-ups free up hours for actual client time."
+  },
+  {
+    "id": "prospect_041",
+    "email": "hello@kestraltech.com",
+    "name": "Kevin Wu",
+    "company": "Kestral Tech",
+    "role": "Technical Consultant",
+    "task": "bug report triage",
+    "hook": "Tech consultants doing support triage \u2014 that's a textbook AI workflow."
+  },
+  {
+    "id": "prospect_042",
+    "email": "info@copperbottomfinance.com",
+    "name": "Nina Patel",
+    "company": "Copperbottom Finance",
+    "role": "Financial Advisor",
+    "task": "client portfolio summaries",
+    "hook": "Personalized portfolio summaries are repetitive, data-heavy work AI agents generate instantly."
+  },
+  {
+    "id": "prospect_043",
+    "email": "tom@brewstercreative.com",
+    "name": "Tom Brewster",
+    "company": "Brewster Creative",
+    "role": "Agency Founder",
+    "task": "creative brief processing",
+    "hook": "Creative briefs \u2192 project plans is a conversion step AI agents handle beautifully."
+  },
+  {
+    "id": "prospect_044",
+    "email": "hello@logicpointengineering.com",
+    "name": "Henry Schmidt",
+    "company": "LogicPoint Engineering",
+    "role": "Project Manager",
+    "task": "timesheet collection",
+    "hook": "Engineering shops lose hours to timesheet collection \u2014 pure AI agent territory."
+  },
+  {
+    "id": "prospect_045",
+    "email": "lucy@lucymarketinghub.com",
+    "name": "Lucy MacDonald",
+    "company": "Lucy Marketing Hub",
+    "role": "Marketing Consultant",
+    "task": "campaign performance summaries",
+    "hook": "Marketing reporting is the highest-ROI automation for boutique consultancies."
+  },
+  {
+    "id": "prospect_046",
+    "email": "info@mapleleafconsulting.ca",
+    "name": "Peter Donovan",
+    "company": "Mapleleaf Consulting",
+    "role": "Strategy Consultant",
+    "task": "competitive research briefs",
+    "hook": "Competitive research is data-heavy, repeatable work \u2014 perfect AI agent scope."
+  },
+  {
+    "id": "prospect_047",
+    "email": "hello@crimsoncode.dev",
+    "name": "Aisha Mohammed",
+    "company": "Crimson Code",
+    "role": "Dev Agency Founder",
+    "task": "code review triage",
+    "hook": "Running a dev agency \u2014 automating initial code review passes saves your senior engineers hours."
+  },
+  {
+    "id": "prospect_048",
+    "email": "emily@emilyrosephotography.com",
+    "name": "Emily Rose",
+    "company": "Emily Rose Photography",
+    "role": "Solo Photographer",
+    "task": "client gallery delivery emails",
+    "hook": "Solo photographers handle enormous client communication overhead \u2014 AI agents streamline it."
+  },
+  {
+    "id": "prospect_049",
+    "email": "info@tidepoolventures.com",
+    "name": "Marcus Webb",
+    "company": "Tidepool Ventures",
+    "role": "Startup Advisor",
+    "task": "investor update templates",
+    "hook": "Advisors who automate investor updates serve more founders in less time."
+  },
+  {
+    "id": "prospect_050",
+    "email": "hello@fernwoodstrategies.com",
+    "name": "Catherine Lin",
+    "company": "Fernwood Strategies",
+    "role": "PR Consultant",
+    "task": "media list research",
+    "hook": "Media list building is time-intensive research an AI agent produces in minutes."
   }
 ]
