@@ -126,16 +126,37 @@ In dev (`NODE_ENV=development`), events log to `console.debug`.
 
 Copy `.env.example` to `.env.local` and fill in values.
 
-## Deployment
+## Deployment & preview
 
-Deploy to Vercel (free tier):
+There are two preview-deploy paths, both wired and ready:
+
+### Option A — Vercel (primary, recommended)
+
+The project is configured for Vercel via `vercel.json` and the
+`.github/workflows/deploy.yml` workflow (posts the preview URL as a PR comment).
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-1. Push the repo to GitHub.
-2. Import the project in Vercel.
-3. Add `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` if using analytics.
-4. Deploy.
+1. Import `flarxen32/agentfit` at [vercel.com/new](https://vercel.com/new) —
+   the GitHub integration auto-deploys on every push (no token needed).
+2. Add `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` if using analytics.
+3. Each push/PR gets a live preview URL.
+
+Alternatively, add repo secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
+`VERCEL_PROJECT_ID` to let the deploy workflow run headlessly.
+
+### Option B — GitHub Pages (zero-credential fallback)
+
+A static-export build (`.github/workflows/deploy-pages.yml`) publishes to
+GitHub Pages using only the built-in `GITHUB_TOKEN`. This is the same app
+minus the `/api/score` health endpoint (which renders as static JSON).
+
+**One-time enable** (requires repo admin via browser or a token with Pages
+permission — cannot be done by a fine-grained PAT):
+Settings → Pages → Build and deployment → Source = **GitHub Actions**.
+
+Once enabled, every push to `main` deploys to
+`https://flarxen32.github.io/agentfit/`.
 
 ## License
 
