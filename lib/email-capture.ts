@@ -45,13 +45,11 @@ export function appendEmailCapture(capture: EmailCapture): void {
   try {
     mkdirSync(DATA_DIR, { recursive: true });
     appendFileSync(FILE, JSON.stringify(capture) + "\n", "utf8");
-  } catch (err) {
-    // Serverless environments have read-only filesystems.
-    // Log the capture so it appears in Vercel runtime logs.
+  } catch {
+    // Serverless environments (Vercel) have read-only filesystems.
+    // Log the capture so it appears in Vercel runtime logs and can be
+    // collected/exported from the observability dashboard.
     console.log("email_capture", JSON.stringify(capture));
-    if (err instanceof Error && !err.message.includes("read-only")) {
-      throw err;
-    }
   }
 }
 
