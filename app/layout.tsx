@@ -43,11 +43,12 @@ export const metadata: Metadata = {
 };
 
 /**
- * Plausible analytics script — only included when
- * NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set. The track() helper in lib/analytics
- * calls window.plausible() which this script provides.
+ * Plausible analytics script.
+ * Uses NEXT_PUBLIC_PLAUSIBLE_DOMAIN if set, otherwise falls back to the
+ * production domain so analytics always work without manual env config.
  */
-const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+const plausibleDomain =
+  process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "agentfit-mu.vercel.app";
 
 export default function RootLayout({
   children,
@@ -79,14 +80,12 @@ export default function RootLayout({
             </Link>
           </div>
         </footer>
-        {plausibleDomain && (
-          <Script
-            defer
-            data-domain={plausibleDomain}
-            src="https://plausible.io/js/script.js"
-            strategy="afterInteractive"
-          />
-        )}
+        <Script
+          defer
+          data-domain={plausibleDomain}
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
