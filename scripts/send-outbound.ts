@@ -18,7 +18,7 @@
  *
  * Exits non-zero on any hard error (missing key, unreadable list).
  */
-import { appendFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
+import { appendFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { loadProspects, sendOne, type OutboundProspect } from "../lib/outbound/mailer";
 

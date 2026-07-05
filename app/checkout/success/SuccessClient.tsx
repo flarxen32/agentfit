@@ -21,18 +21,17 @@ export function SuccessClient() {
   const params = useSearchParams();
   const sessionId = params.get("session_id");
   const [info, setInfo] = useState<SessionInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!sessionId);
 
   useEffect(() => {
-    if (!sessionId) {
-      setLoading(false);
-      return;
-    }
+    if (!sessionId) return;
+    let cancelled = false;
     fetch(`/api/checkout/status?session_id=${encodeURIComponent(sessionId)}`)
       .then((r) => r.json())
-      .then((data) => setInfo(data))
-      .catch(() => setInfo({ error: "Could not load session details" }))
-      .finally(() => setLoading(false));
+      .then((data) => { if (!cancelled) setInfo(data); })
+      .catch(() => { if (!cancelled) setInfo({ error: "Could not load session details" }); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [sessionId]);
 
   const paid = info?.status === "paid" || info?.status === "dev";
