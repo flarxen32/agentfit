@@ -42,6 +42,13 @@ const guides = [
     readTime: "6 min read",
   },
   {
+    href: "/learn/ai-agents-for-agencies",
+    title: "AI Agents for Agencies: Automate Delivery, Scale Without Hiring",
+    description:
+      "How digital agencies use AI agents to automate reporting, onboarding, QA, and client communication — delivering more output per team member without growing headcount.",
+    readTime: "6 min read",
+  },
+  {
     href: "/learn/ai-automation-roi",
     title: "AI Automation ROI Calculator: How Much Could You Save?",
     description:
