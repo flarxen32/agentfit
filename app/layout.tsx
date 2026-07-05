@@ -59,6 +59,17 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
+        <footer className="border-t border-zinc-200 py-6 dark:border-zinc-800">
+          <div className="mx-auto flex max-w-3xl items-center justify-between px-6 text-xs text-zinc-500 dark:text-zinc-500">
+            <span>© {new Date().getFullYear()} AgentFit</span>
+            <a
+              href="/how-it-works"
+              className="transition hover:text-zinc-900 dark:hover:text-zinc-300"
+            >
+              How it works
+            </a>
+          </div>
+        </footer>
         {plausibleDomain && (
           <Script
             defer
