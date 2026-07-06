@@ -180,8 +180,28 @@ const guides = [
 ];
 
 export default function LearnIndexPage() {
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "AI Automation Guides for Small Business",
+    description:
+      "Practical, jargon-free guides on AI automation for small businesses.",
+    itemListElement: guides.map((g, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: g.title,
+      url: `https://agentfit-mu.vercel.app${g.href}`,
+    })),
+  };
+
   return (
     <main className="mx-auto w-full max-w-3xl px-6 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(itemListJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
         Learn
       </h1>

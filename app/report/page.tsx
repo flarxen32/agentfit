@@ -20,8 +20,34 @@ export const metadata: Metadata = {
  * useSearchParams (required by Next.js for static prerender).
  */
 export default function ReportPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "AgentFit Automation Report",
+    description:
+      "Your personalized AI automation fit score, top automatable tasks, and estimated savings.",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      description: "Free AI automation audit with personalized report card.",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "AgentFit",
+    },
+  };
+
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <Suspense fallback={<ReportFallback />}>
         <ReportCardClient />
       </Suspense>
