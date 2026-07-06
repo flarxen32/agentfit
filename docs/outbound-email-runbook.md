@@ -26,19 +26,86 @@ without sending.
   NEVER prefix with `NEXT_PUBLIC_`.
 
 ### 2. Verify a sending domain
+
 Resend → Domains → Add domain → enter `hello.xablam.com`.
-Resend returns DNS records to add:
 
-- **DKIM**: 3× TXT/CNAME records under `resend._domainkey.hello.xablam.com`
-- **Return-Path**: `send.hello.xablam.com` CNAME → `feedback.resend.com`
-- **SPF** (optional, improves deliverability): TXT on `hello.xablam.com`:
-  `v=spf1 include:amazonses.com ~all`
+> **Fastest path (no DNS at all):** if you just want to prove the send path
+> works and satisfy the DoD *today*, you can skip domain verification entirely
+> by sending from Resend's shared `onboarding@resend.dev` address. Set
+> `RESEND_FROM_EMAIL=onboarding@resend.dev` (and leave `RESEND_FROM_DOMAIN`
+> unset) in step 3, then run the test in step 4. This only works for the one
+> test email and to a single recipient you control — not for the 50-email
+> outbound batch, which needs a verified custom domain to avoid the spam folder.
+> Use it to unblock quickly, then verify `hello.xablam.com` for the real send.
 
-xablam.com uses **Cloudflare** nameservers (`alan.ns.cloudflare.com`,
-`fay.ns.cloudflare.com`). Add these records in the Cloudflare DNS console.
-DNS access is needed from whoever holds the Cloudflare account.
+Resend generates the exact DNS records after you add the domain — copy each one
+verbatim into DNS. The record set looks like this (the *values* are generated
+per-domain by Resend; don't invent them):
 
-Wait for Resend to show the domain as **verified** (usually minutes).
+- **DKIM** — TXT records at `resend._domainkey.hello.xablam.com` (Resend gives
+  you the long public-key strings).
+- **Return-Path** — CNAME: `send.hello.xablam.com` → `feedback.resend.com`.
+- **SPF** — TXT on `hello.xablam.com`: `v=spf1 include:amazonses.com ~all`
+  (recommended for deliverability).
+
+#### How to add these records in Cloudflare (xablam.com lives on Cloudflare DNS)
+
+xablam.com uses **Cloudflare** nameservers
+(`alan.ns.cloudflare.com`, `fay.ns.cloudflare.com`). Here is the exact click
+path for whoever holds the Cloudflare account:
+
+1. Log in at https://dash.cloudflare.com (sign in with the account that owns
+   `xablam.com` — if you don't know which account, check the email that
+   registered the domain, or look for a Cloudflare welcome email; the
+   nameservers are set at the registrar, Namecheap, but the records are edited
+   in Cloudflare).
+
+2. On the dashboard, click the **xablam.com** zone (it will say "Active").
+
+3. In the left sidebar, click **DNS → Records**.
+
+4. Click **Add record**. You'll add one record per line Resend gave you.
+   Fill it in like this for each record type:
+
+   **For a TXT record** (SPF, and DKIM if Resend shows TXT):
+   - Type: `TXT`
+   - Name: the subdomain part, *without* `.xablam.com`.
+     - SPF record → Resend names it `hello.xablam.com`, so in Cloudflare type
+       just `hello`.
+     - DKIM record → Resend names it `resend._domainkey.hello.xablam.com`, so
+       in Cloudflare type `resend._domainkey.hello`.
+     Cloudflare auto-appends `.xablam.com`.
+   - Content: paste the exact value Resend shows (e.g. `v=spf1 include:amazonses.com ~all`).
+   - Proxy status: leave gray cloud (**DNS only**). Email records must not be
+     proxied.
+
+   **For a CNAME record** (Return-Path `send.hello.xablam.com`):
+   - Type: `CNAME`
+   - Name: `send.hello` (Resend names it `send.hello.xablam.com`; Cloudflare
+     appends `.xablam.com`).
+   - Target: `feedback.resend.com`
+   - Proxy status: **DNS only** (gray cloud). If the toggle offers "Proxied",
+     switch it off — proxied CNAMEs break email verification.
+
+5. Click **Save** for each record. Add one record per line Resend listed.
+
+6. Back in Resend → Domains, click **Verify DNS records** (or wait — Resend
+   polls automatically). Verification is usually within a few minutes; DKIM can
+   take up to ~72h in rare cases but normally is fast.
+
+7. The domain shows a green **Verified** badge when done.
+
+**Quick naming recap** (zone is `xablam.com`, so you type the part before
+`.xablam.com`):
+
+| Resend record name                 | Type  | Cloudflare "Name" field    |
+|------------------------------------|-------|----------------------------|
+| `hello.xablam.com`                 | TXT   | `hello`                    |
+| `resend._domainkey.hello.xablam.com` | TXT | `resend._domainkey.hello`  |
+| `send.hello.xablam.com`            | CNAME | `send.hello`               |
+
+If you don't have Cloudflare login access, the person who does needs to do
+steps 1–7. Once Resend shows Verified, the rest is pure env config.
 
 ### 3. Set the env vars
 ```
