@@ -15,6 +15,9 @@ set +a
 if [ -f .paperclip-env ]; then
   source .paperclip-env
 fi
+# Unset stale RUN_ID — the cron fires autonomously with no heartbeat context.
+# Sending a completed run's ID could cause the PATCH to be rejected.
+unset PAPERCLIP_RUN_ID
 
 # --- Paperclip context ---
 ISSUE_ID="3a3edfde-dfcc-45d7-b873-4ac38b7dcf6f"
