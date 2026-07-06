@@ -107,6 +107,34 @@ path for whoever holds the Cloudflare account:
 If you don't have Cloudflare login access, the person who does needs to do
 steps 1–7. Once Resend shows Verified, the rest is pure env config.
 
+#### Automated path (preferred if you can hand over a Cloudflare API token)
+
+Instead of clicking through the dashboard, give engineering three secrets and
+`scripts/provision-resend-domain.sh` will create the Resend domain and push all
+DNS records into Cloudflare in one shot (idempotent; re-running skips records
+that already exist):
+
+```
+RESEND_API_KEY=re_...
+CLOUDFLARE_API_TOKEN=...   # token scoped to Zone:DNS:Edit on xablam.com
+CLOUDFLARE_ZONE_ID=...     # shown on the Cloudflare xablam.com overview page
+```
+
+Dry-run first to see exactly what it will do:
+`DRY_RUN=1 ./scripts/provision-resend-domain.sh`
+
+How to make the Cloudflare token (takes ~2 min, dashboard):
+1. dash.cloudflare.com → right-top avatar → **My Profile** → **API Tokens**.
+2. **Create Token** → **Edit zone DNS** (template) → Zone Resources =
+   `Include — Specific zone — xablam.com`.
+3. Leave IP filtering / TTL empty. **Continue to summary → Create**.
+4. Copy the token (shown once). Send it over the same secure channel as the
+   Resend key.
+
+The **Zone ID** is on the xablam.com overview screen in Cloudflare (right-hand
+column, labelled "Zone ID"). Both can also be obtained via the Cloudflare API
+if you prefer not to click.
+
 ### 3. Set the env vars
 ```
 RESEND_API_KEY=re_xxxxxxxxxxxxx
