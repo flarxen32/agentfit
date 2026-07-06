@@ -113,5 +113,32 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true, id: capture.id });
+  // Auto-followup: send personalized email instantly. No-ops if
+  // RESEND_API_KEY is not set — capture succeeds regardless.
+  let followupSent = false;
+  try {
+    const { sendLeadFollowup } = await import("@/lib/outbound/auto-followup");
+    const result = await sendLeadFollowup({
+      email,
+      fitScore,
+      grade,
+      role,
+      task,
+      tools,
+      industry,
+      hoursPerWeek,
+    });
+    followupSent = result.sent;
+    if (result.sent) {
+      console.info("lead_followup_sent", { email, messageId: result.messageId });
+    }
+  } catch (err) {
+    // Never let follow-up failure block the capture
+    console.error("lead_followup_unexpected_error", {
+      email,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  return NextResponse.json({ ok: true, id: capture.id, followupSent });
 }
