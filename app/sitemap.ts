@@ -87,6 +87,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     `${base}/learn/ai-automation-for-lead-generation`,
     `${base}/learn/ai-agent-vs-virtual-assistant`,
     `${base}/learn/automate-competitor-research-with-ai`,
+    `${base}/learn/automate-invoice-processing-with-ai`,
+    `${base}/learn/ai-agent-for-customer-support`,
+    `${base}/learn/automate-social-media-scheduling-with-ai`,
+    `${base}/learn/ai-agent-for-sales-lead-qualification`,
+    `${base}/learn/automate-data-entry-with-ai`,
   ].map((url) => ({
     url,
     lastModified: new Date(),
