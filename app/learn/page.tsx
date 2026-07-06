@@ -142,6 +142,41 @@ const guides = [
       "Stop spending 3+ hours/week manually checking competitors. AI agents track pricing, features, reviews, and hiring signals 24/7.",
     readTime: "6 min read",
   },
+  {
+    href: "/learn/automate-invoice-processing-with-ai",
+    title: "Automate Invoice Processing With AI: AP Automation Without an ERP",
+    description:
+      "AI agents read, extract, and reconcile invoices 24/7 — no templates, no manual data entry. Cut AP time by 90% for under $50/month.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/learn/ai-agent-for-customer-support",
+    title: "AI Agent for Customer Support: 24/7 Tier-1 Without Hiring",
+    description:
+      "Resolve 60-80% of support tickets without a human. An AI agent handles order status, refunds, FAQs, and routing — for under $100/month.",
+    readTime: "7 min read",
+  },
+  {
+    href: "/learn/automate-social-media-scheduling-with-ai",
+    title: "Automate Social Media Scheduling With AI: Post on Autopilot",
+    description:
+      "Stop spending 5+ hours/week on social media. An AI agent drafts, schedules, and repurposes content across platforms automatically.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/learn/ai-agent-for-sales-lead-qualification",
+    title: "AI Agent for Sales Lead Qualification: Auto-Qualify Before You Call",
+    description:
+      "Stop wasting calls on unqualified leads. An AI agent scores, enriches, and routes leads automatically — book 3x more demos from the same traffic.",
+    readTime: "7 min read",
+  },
+  {
+    href: "/learn/automate-data-entry-with-ai",
+    title: "Automate Data Entry With AI: Kill the Copy-Paste Tax Forever",
+    description:
+      "Stop re-typing data between tools. An AI agent reads any document and enters it where it belongs — 95% accuracy, 90% time savings.",
+    readTime: "7 min read",
+  },
 ];
 
 export default function LearnIndexPage() {
