@@ -51,7 +51,8 @@ export async function POST(req: Request) {
     /\.invalid$/i,
     /\.example$/i,
     /\.localhost$/i,
-    /@xro\.(test|dev)$/i,
+    /\.local$/i,
+    /@xro\.(test|dev|local)$/i,
     /@paperclip\.test$/i,
     /^health[-_]?check/i,
     /^heartbeat[-_]?/i,
@@ -63,8 +64,20 @@ export async function POST(req: Request) {
     /^attribution[-_]?/i,
     /^post[-_]?deploy[-_]?test/i,
     /^real[-_]?prospect[-_]?test/i,
+    /^test[-_@]/i,
+    /^test@/i,
+    /^verify[-_]?test/i,
+    /^example@/i,
+    /^sample@/i,
+    /^demo@/i,
   ];
-  if (testPatterns.some((re) => re.test(email))) {
+  // Also reject probe captures that have NO audit context: a real visitor
+  // always completes the audit before entering their email, so they carry
+  // a fitScore > 0 and at least one audit field (role/task/tools/industry).
+  // Heartbeat/healthcheck probes POST a bare {email} with no context.
+  const hasAuditContext =
+    fitScore > 0 || role || task || tools || industry;
+  if (testPatterns.some((re) => re.test(email)) || !hasAuditContext) {
     // Return ok so the probe considers the capture "successful", but don't
     // actually store it — the healthcheck only cares about the endpoint
     // responding, not that a lead was created.
