@@ -39,6 +39,23 @@ function alreadySentEmails(logPath: string): Set<string> {
   return sent;
 }
 
+/** Read the Resend delivery-status file and return emails that bounced.
+ *  Used by --exclude-bounced to protect sender reputation on follow-up sends.
+ *  File format: { results: { "email@x.com": "bounced", ... } } */
+function bouncedEmails(): Set<string> {
+  const bounced = new Set<string>();
+  const bounceFile = join(process.cwd(), "data", "first-touch-delivery-status.json");
+  if (!existsSync(bounceFile)) return bounced;
+  try {
+    const data = JSON.parse(readFileSync(bounceFile, "utf8"));
+    const results = data?.results ?? {};
+    for (const [email, status] of Object.entries(results)) {
+      if (status === "bounced") bounced.add(email.toLowerCase());
+    }
+  } catch { /* ignore read errors */ }
+  return bounced;
+}
+
 function flag(name: string): string | undefined {
   const i = process.argv.indexOf(name);
   return i >= 0 ? process.argv[i + 1] : undefined;
@@ -99,6 +116,7 @@ async function main() {
   const limit = flag("--limit") ? Number(flag("--limit")) : undefined;
   const template = flag("--template") ?? "first";
   const skipSent = flagBool("--skip-sent");
+  const excludeBounced = flagBool("--exclude-bounced");
 
   let prospects: OutboundProspect[];
   try {
@@ -114,6 +132,14 @@ async function main() {
     prospects = prospects.filter((p) => !already.has(p.email.toLowerCase()));
     const skipped = before - prospects.length;
     if (skipped > 0) console.log(`--skip-sent: ${skipped} prospect(s) already sent; ${prospects.length} remaining.`);
+  }
+  if (excludeBounced) {
+    const bounced = bouncedEmails();
+    const before = prospects.length;
+    prospects = prospects.filter((p) => !bounced.has(p.email.toLowerCase()));
+    const skipped = before - prospects.length;
+    if (skipped > 0) console.log(`--exclude-bounced: ${skipped} bounced address(es) suppressed; ${prospects.length} remaining.`);
+    else console.log(`--exclude-bounced: no bounced addresses found in data/first-touch-delivery-status.json; ${prospects.length} remaining.`);
   }
   if (limit) prospects = prospects.slice(0, limit);
   console.log(`${dryRun ? "[DRY RUN] " : ""}Sending ${template} to ${prospects.length} prospect(s).`);
