@@ -1,48 +1,44 @@
 import { ImageResponse } from "next/og";
 
 /**
- * Default Open Graph image for AgentFit.
+ * Root Open Graph image — shown when any AgentFit URL is shared on
+ * Reddit, Hacker News, Slack, X, LinkedIn, iMessage, etc.
  *
- * Rendered at build/request time by Next.js metadata file convention.
- * Shows a branded social preview card: dark gradient background, AgentFit
- * wordmark, value prop headline, and CTA — matching the site's design
- * language (emerald accent, zinc neutrals).
+ * Using Next.js file convention (opengraph-image.tsx), this auto-injects
+ * <meta property="og:image"> and <meta name="twitter:image"> tags.
  *
- * This image is what appears when the AgentFit URL is shared on Indie
- * Hackers, Reddit, Hacker News, Twitter/X, LinkedIn, Slack, etc.
- * Without it, those platforms show a blank or text-only link.
+ * Dynamic generation via next/og — no static asset needed, no human keys.
  */
-
 export const alt = "AgentFit — Free AI Automation Audit";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+export default function Image() {
   return new ImageResponse(
     (
       <div
         style={{
-          height: "100%",
           width: "100%",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
           justifyContent: "center",
-          background:
-            "linear-gradient(135deg, #09090b 0%, #18181b 50%, #064e3b 100%)",
+          alignItems: "flex-start",
+          background: "#0f172a",
           padding: "80px",
+          fontFamily: "system-ui, -apple-system, sans-serif",
           position: "relative",
         }}
       >
-        {/* Accent bar top */}
+        {/* Accent gradient bar */}
         <div
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            right: 0,
+            width: "100%",
             height: "8px",
-            background: "linear-gradient(90deg, #10b981 0%, #34d399 100%)",
+            background: "linear-gradient(90deg, #6366f1, #a855f7, #6366f1)",
           }}
         />
 
@@ -51,78 +47,8 @@ export default function OpenGraphImage() {
           style={{
             display: "flex",
             alignItems: "center",
-            marginBottom: "32px",
-            padding: "10px 24px",
-            borderRadius: "100px",
-            backgroundColor: "rgba(16, 185, 129, 0.15)",
-            border: "1px solid rgba(16, 185, 129, 0.3)",
-          }}
-        >
-          <span
-            style={{
-              fontSize: 24,
-              fontWeight: 500,
-              color: "#34d399",
-              letterSpacing: "0.02em",
-            }}
-          >
-            FREE · 60 seconds · No signup
-          </span>
-        </div>
-
-        {/* Headline */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            maxWidth: "900px",
-          }}
-        >
-          <span
-            style={{
-              fontSize: 68,
-              fontWeight: 700,
-              color: "#fafafa",
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            What&apos;s the one task
-          </span>
-          <span
-            style={{
-              fontSize: 68,
-              fontWeight: 700,
-              color: "#34d399",
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            you keep doing twice?
-          </span>
-        </div>
-
-        {/* Subheadline */}
-        <span
-          style={{
-            fontSize: 30,
-            color: "#a1a1aa",
-            marginTop: "28px",
-            maxWidth: "800px",
-            lineHeight: 1.4,
-          }}
-        >
-          Get a free AI automation audit — personalized score, top
-          opportunities, and ROI estimate for your business.
-        </span>
-
-        {/* Brand + URL */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginTop: "auto",
-            gap: "16px",
+            gap: "12px",
+            marginBottom: "24px",
           }}
         >
           <div
@@ -133,41 +59,85 @@ export default function OpenGraphImage() {
               width: "48px",
               height: "48px",
               borderRadius: "12px",
-              backgroundColor: "#10b981",
+              background: "linear-gradient(135deg, #6366f1, #a855f7)",
+              fontSize: "28px",
             }}
           >
-            <span
-              style={{
-                fontSize: 28,
-                fontWeight: 800,
-                color: "#09090b",
-              }}
-            >
-              A
-            </span>
+            ⚡
           </div>
-          <span
-            style={{
-              fontSize: 28,
-              fontWeight: 600,
-              color: "#e4e4e7",
-            }}
-          >
+          <span style={{ fontSize: "28px", color: "#94a3b8", fontWeight: 500 }}>
             AgentFit
           </span>
-          <span
-            style={{
-              fontSize: 24,
-              color: "#52525b",
-            }}
-          >
-            agentfit-mu.vercel.app
-          </span>
+        </div>
+
+        {/* Headline */}
+        <div
+          style={{
+            fontSize: "72px",
+            fontWeight: 800,
+            color: "#f8fafc",
+            lineHeight: 1.1,
+            marginBottom: "20px",
+            maxWidth: "900px",
+          }}
+        >
+          Free AI Automation Audit
+        </div>
+
+        {/* Subtitle */}
+        <div
+          style={{
+            fontSize: "32px",
+            color: "#cbd5e1",
+            lineHeight: 1.3,
+            maxWidth: "850px",
+          }}
+        >
+          Find out what an AI agent should do for your business — in 60 seconds.
+        </div>
+
+        {/* CTA pill */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: "40px",
+            padding: "16px 32px",
+            borderRadius: "999px",
+            background: "linear-gradient(135deg, #6366f1, #a855f7)",
+            color: "white",
+            fontSize: "26px",
+            fontWeight: 600,
+          }}
+        >
+          Get your fit score →
+        </div>
+
+        {/* Decorative dots bottom right */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "60px",
+            right: "60px",
+            display: "flex",
+            gap: "12px",
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: i === 0 ? "#6366f1" : i === 1 ? "#a855f7" : "#38bdf8",
+                opacity: 0.6,
+              }}
+            />
+          ))}
         </div>
       </div>
     ),
-    {
-      ...size,
-    }
+    { ...size },
   );
 }
