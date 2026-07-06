@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Your Automation Report Card — AgentFit",
   description:
     "Your personalized AI automation fit score, top automatable tasks, and estimated savings.",
+  alternates: {
+    canonical: "/report",
+  },
 };
 
 /**

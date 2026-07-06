@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Browse 40+ real tasks AI agents can take off your plate, ranked by time saved and difficulty. Find your #1 automation opportunity.",
   },
+  alternates: {
+    canonical: "/learn/what-tasks-can-ai-automate",
+  },
 };
 
 const jsonLd = {

@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "The honest comparison: when ChatGPT is enough, when you need a custom agent, and the cost/effort math for each.",
   },
+  alternates: {
+    canonical: "/learn/chatgpt-vs-custom-ai-agent",
+  },
 };
 
 const jsonLd = {

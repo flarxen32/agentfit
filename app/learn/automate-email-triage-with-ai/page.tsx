@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "The #1 time-sink for most knowledge workers is email. Here's how to automate it.",
   },
+  alternates: {
+    canonical: "/learn/automate-email-triage-with-ai",
+  },
 };
 
 const jsonLd = {

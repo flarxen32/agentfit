@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Practical AI automation for agencies. Stop losing billable hours to reporting, research, and client follow-ups.",
   },
+  alternates: {
+    canonical: "/learn/ai-automation-for-agencies",
+  },
 };
 
 const jsonLd = {

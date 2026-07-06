@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Custom AI agent ($750) vs part-time hire ($25k+/yr) vs freelancer ($5k+/project). See the real cost comparison and break-even math.",
   },
+  alternates: {
+    canonical: "/learn/ai-agent-cost-vs-hiring",
+  },
 };
 
 const jsonLd = {

@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Compare 12 AI automation platforms: pricing, pros, cons, and recommendations by use case.",
   },
+  alternates: {
+    canonical: "/learn/best-ai-automation-tools",
+  },
 };
 
 const jsonLd = {

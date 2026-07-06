@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Get Your Custom AI Agent — AgentFit",
   description:
     "We'll build your custom AI agent in 7 days. $750. If it doesn't save you hours, you don't pay.",
+  alternates: {
+    canonical: "/offer",
+  },
 };
 
 /**

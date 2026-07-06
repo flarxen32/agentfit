@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Which repetitive tasks can AI automate for your small business? A practical, jargon-free guide with real examples and ROI math.",
   },
+  alternates: {
+    canonical: "/learn/ai-automation-for-small-business",
+  },
 };
 
 const jsonLd = {

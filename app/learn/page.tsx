@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Guides on AI automation for small business: which tasks to automate, cost comparisons, and ROI frameworks.",
   },
+  alternates: {
+    canonical: "/learn",
+  },
 };
 
 const guides = [

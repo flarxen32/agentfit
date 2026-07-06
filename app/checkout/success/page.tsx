@@ -5,6 +5,9 @@ import { SuccessClient } from "./SuccessClient";
 export const metadata: Metadata = {
   title: "Payment confirmed — AgentFit",
   description: "Your custom AI agent build is confirmed.",
+  alternates: {
+    canonical: "/checkout/success",
+  },
 };
 
 export default function CheckoutSuccessPage() {

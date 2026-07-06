@@ -19,9 +19,15 @@ const SITE_URL = "https://agentfit-mu.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "AgentFit — Free AI Automation Audit",
+  title: {
+    default: "AgentFit — Free AI Automation Audit",
+    template: "%s | AgentFit",
+  },
   description:
     "Find out what an AI agent should do for your business — free, in 60 seconds. Get a personalized score, top automation opportunities, and ROI estimate.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "AgentFit — Free AI Automation Audit",
     description:

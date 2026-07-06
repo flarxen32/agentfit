@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Real ROI math for AI automation. Hours saved, dollars recovered, and break-even analysis.",
   },
+  alternates: {
+    canonical: "/learn/ai-automation-roi",
+  },
 };
 
 const jsonLd = {

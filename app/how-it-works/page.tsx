@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Answer 5 quick questions. Get a personalized automation score, top opportunities, and ROI estimate — free.",
   },
+  alternates: {
+    canonical: "/how-it-works",
+  },
 };
 
 const faqs = [

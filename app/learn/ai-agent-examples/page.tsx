@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description:
       "Concrete AI agent use cases with workflows, tools, and hours saved. See what's actually working for small businesses.",
   },
+  alternates: {
+    canonical: "/learn/ai-agent-examples",
+  },
 };
 
 const jsonLd = {
