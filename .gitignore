@@ -44,3 +44,4 @@ next-env.d.ts
 /data
 # but keep the example prospect schema
 !/data/outbound-prospects.example.json
+.paperclip-env
