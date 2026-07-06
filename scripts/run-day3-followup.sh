@@ -11,10 +11,38 @@ set -a
 source .env.local
 set +a
 
-# --- Load Paperclip credentials (written by setup, not in shell profile) ---
+# --- Load Paperclip credentials for cron (JWT secret, NOT expiring token) ---
+# .paperclip-env contains the permanent agent JWT secret + IDs needed to
+# mint fresh API tokens at runtime. Cron fires days after the heartbeat that
+# wrote the file, so any JWT in it would be expired.
 if [ -f .paperclip-env ]; then
+  set -a
   source .paperclip-env
+  set +a
 fi
+
+# --- Generate a fresh Paperclip API JWT at runtime ---
+if [ -n "${PAPERCLIP_AGENT_JWT_SECRET:-}" ] && [ -n "${PAPERCLIP_AGENT_ID:-}" ]; then
+  export PAPERCLIP_API_KEY=$(python3 -c "
+import jwt, time, os, uuid
+payload = {
+    'sub': os.environ['PAPERCLIP_AGENT_ID'],
+    'company_id': os.environ['PAPERCLIP_COMPANY_ID'],
+    'adapter_type': 'hermes_local',
+    'run_id': str(uuid.uuid4()),
+    'iat': int(time.time()),
+    'exp': int(time.time()) + 300,
+    'iss': 'paperclip',
+    'aud': 'paperclip-api'
+}
+print(jwt.encode(payload, os.environ['PAPERCLIP_AGENT_JWT_SECRET'], algorithm='HS256'))
+" 2>/dev/null || echo "")
+  echo "Generated fresh Paperclip API JWT for cron (agent ${PAPERCLIP_AGENT_ID})."
+else
+  echo "FATAL: Missing PAPERCLIP_AGENT_JWT_SECRET or PAPERCLIP_AGENT_ID. Cannot authenticate to Paperclip API."
+  exit 1
+fi
+
 # Unset stale RUN_ID — the cron fires autonomously with no heartbeat context.
 # Sending a completed run's ID could cause the PATCH to be rejected.
 unset PAPERCLIP_RUN_ID
