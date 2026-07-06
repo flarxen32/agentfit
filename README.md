@@ -2,6 +2,12 @@
 
 > Find out what an AI agent should do for your business — free.
 
+[![Live](https://img.shields.io/badge/try%20it-live-brightgreen)](https://agentfit-mu.vercel.app)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Deploy with Vercel](https://img.shields.io/badge/deploy-Vercel-black)](https://vercel.com/new)
+
+**👉 [Try the live tool](https://agentfit-mu.vercel.app) — takes 3 minutes, no signup.**
+
 AgentFit is a free, interactive web tool that audits a visitor's business for
 AI automation opportunities, scores each one by hours saved and ROI, and hands
 off to a custom-agent offer. It's the classic "free tool as lead-gen" play
