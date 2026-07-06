@@ -83,9 +83,12 @@ NEXT: Monitor inbox + Resend dashboard. Report reply/call metrics when available
 METRICS
 )
 
-# Build JSON safely with jq
+# Build JSON safely with jq.
+# Keep status in_progress: the send is done but reply/metrics tracking continues
+# until the day-7 kill criterion evaluation (2026-07-13).
+# Using in_review here would fail with 422 (no review path available from cron).
 PAYLOAD=$(jq -n \
-  --arg status "in_review" \
+  --arg status "in_progress" \
   --arg comment "$METRICS_COMMENT" \
   '{status:$status, comment:$comment}')
 
