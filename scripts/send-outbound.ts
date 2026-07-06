@@ -18,9 +18,26 @@
  *
  * Exits non-zero on any hard error (missing key, unreadable list).
  */
-import { appendFileSync, mkdirSync, existsSync } from "node:fs";
+import { appendFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadProspects, sendOne, type OutboundProspect } from "../lib/outbound/mailer";
+
+/** Read the send log and return the set of emails already successfully sent
+ *  (any template). Used by --skip-sent to avoid double-sending on re-runs. */
+function alreadySentEmails(logPath: string): Set<string> {
+  const sent = new Set<string>();
+  if (!existsSync(logPath)) return sent;
+  try {
+    const lines = readFileSync(logPath, "utf8").split("\n").filter(Boolean);
+    for (const line of lines) {
+      try {
+        const rec = JSON.parse(line);
+        if (rec.status === "sent" && rec.email) sent.add(rec.email.toLowerCase());
+      } catch { /* skip malformed line */ }
+    }
+  } catch { /* ignore read errors */ }
+  return sent;
+}
 
 function flag(name: string): string | undefined {
   const i = process.argv.indexOf(name);
@@ -52,6 +69,24 @@ function firstTouchText(p: OutboundProspect): string {
   return `Hi ${name},\n\n${taskLine}\n\nWe build custom AI agents that take that task off your plate — built in 7 days, $750 flat. If it doesn't save you hours, you don't pay.\n\nWant me to scope yours? Book a 30-minute call: https://agentfit-mu.vercel.app/offer — I'll come with a build plan already drafted.\n\n— Alex\nAgentFit`;
 }
 
+/** Day-3 follow-up. Shorter, references the first email, same single CTA. */
+function followupHtml(p: OutboundProspect): string {
+  const name = p.name ? p.name.split(" ")[0] : "there";
+  const task = p.task ?? "your biggest time-sink";
+  return `<!doctype html><html><body style="font-family:system-ui,sans-serif;max-width:520px">
+<p>Hi ${name},</p>
+<p>Quick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:</p>
+<p>Is this worth a 30-minute look? I'll come with a build plan already drafted, and if the agent doesn't save you hours, you don't pay the $750.</p>
+<p><a href="https://agentfit-mu.vercel.app/offer">Grab a slot here</a> — or just reply "no" and I'll stop.</p>
+<p>— Alex<br/>AgentFit</p>
+</body></html>`;
+}
+function followupText(p: OutboundProspect): string {
+  const name = p.name ? p.name.split(" ")[0] : "there";
+  const task = p.task ?? "your biggest time-sink";
+  return `Hi ${name},\n\nQuick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:\n\nIs this worth a 30-minute look? I'll come with a build plan already drafted, and if the agent doesn't save you hours, you don't pay the $750.\n\nGrab a slot here: https://agentfit-mu.vercel.app/offer — or just reply "no" and I'll stop.\n\n— Alex\nAgentFit`;
+}
+
 const LOG = join(process.cwd(), "data", "outbound-log.jsonl");
 
 function logResult(rec: Record<string, unknown>) {
@@ -63,6 +98,7 @@ async function main() {
   const dryRun = flagBool("--dry-run");
   const limit = flag("--limit") ? Number(flag("--limit")) : undefined;
   const template = flag("--template") ?? "first";
+  const skipSent = flagBool("--skip-sent");
 
   let prospects: OutboundProspect[];
   try {
@@ -71,6 +107,13 @@ async function main() {
     console.error("Could not read data/outbound-prospects.json:", e instanceof Error ? e.message : e);
     console.error("Put the XRO-10 prospect list there (array of {id,email,name,role,task,hook}).");
     process.exit(1);
+  }
+  if (skipSent) {
+    const already = alreadySentEmails(LOG);
+    const before = prospects.length;
+    prospects = prospects.filter((p) => !already.has(p.email.toLowerCase()));
+    const skipped = before - prospects.length;
+    if (skipped > 0) console.log(`--skip-sent: ${skipped} prospect(s) already sent; ${prospects.length} remaining.`);
   }
   if (limit) prospects = prospects.slice(0, limit);
   console.log(`${dryRun ? "[DRY RUN] " : ""}Sending ${template} to ${prospects.length} prospect(s).`);
@@ -82,8 +125,8 @@ async function main() {
       template === "followup"
         ? `Re: your ${p.task ?? "biggest time-sink"}`
         : `Your ${p.task ?? "#1 task"} — automated?`;
-    const html = template === "followup" ? firstTouchHtml(p) : firstTouchHtml(p);
-    const text = template === "followup" ? firstTouchText(p) : firstTouchText(p);
+    const html = template === "followup" ? followupHtml(p) : firstTouchHtml(p);
+    const text = template === "followup" ? followupText(p) : firstTouchText(p);
 
     if (dryRun) {
       console.log(`--- ${p.email} ---\n${text}\n`);
