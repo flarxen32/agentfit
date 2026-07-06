@@ -87,7 +87,7 @@ export default function OpenGraphImage() {
               letterSpacing: "-0.03em",
             }}
           >
-            What's the one task
+            What&apos;s the one task
           </span>
           <span
             style={{
