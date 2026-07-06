@@ -92,6 +92,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     `${base}/learn/automate-social-media-scheduling-with-ai`,
     `${base}/learn/ai-agent-for-sales-lead-qualification`,
     `${base}/learn/automate-data-entry-with-ai`,
+    `${base}/learn/ai-agent-for-receipts-and-expenses`,
+    `${base}/learn/ai-automation-for-coaches-and-course-creators`,
+    `${base}/learn/ai-agent-for-scheduling-and-calendar`,
+    `${base}/learn/ai-automation-for-ecommerce`,
+    `${base}/learn/ai-agent-for-content-repurposing`,
+    `${base}/learn/ai-automation-for-real-estate`,
   ].map((url) => ({
     url,
     lastModified: new Date(),
