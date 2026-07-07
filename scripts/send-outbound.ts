@@ -201,8 +201,8 @@ async function main() {
   for (const p of prospects) {
     const subject =
       template === "followup"
-        ? `Re: your ${p.task ?? "biggest time-sink"}`
-        : `Your ${p.task ?? "#1 task"} — automated?`;
+        ? `Re: your ${cleanTask(p.task)}`
+        : `Your ${cleanTask(p.task)} — automated?`;
     const html = template === "followup" ? followupHtml(p) : firstTouchHtml(p);
     const text = template === "followup" ? followupText(p) : firstTouchText(p);
 
