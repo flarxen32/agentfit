@@ -30,14 +30,15 @@ if [ -f .paperclip-env ]; then
 fi
 
 # --- Generate a fresh Paperclip API JWT at runtime ---
-if [ -n "${PAPERCLIP_AGENT_JWT_SECRET:-}" ] && [ -n "${PAPERCLIP_AGENT_ID:-}" ]; then
-  export PAPERCLIP_API_KEY=$(python3 -c "
+# Generate run_id in shell so both JWT payload and X-Paperclip-Run-Id header match.
+CRON_RUN_ID=$(python3 -c "import uuid; print(uuid.uuid4())")
+export PAPERCLIP_API_KEY=$(PAPERCLIP_RUN_ID="$CRON_RUN_ID" python3 -c "
 import jwt, time, os, uuid
 payload = {
     'sub': os.environ['PAPERCLIP_AGENT_ID'],
     'company_id': os.environ['PAPERCLIP_COMPANY_ID'],
     'adapter_type': 'hermes_local',
-    'run_id': str(uuid.uuid4()),
+    'run_id': os.environ['PAPERCLIP_RUN_ID'],
     'iat': int(time.time()),
     'exp': int(time.time()) + 300,
     'iss': 'paperclip',
@@ -45,15 +46,15 @@ payload = {
 }
 print(jwt.encode(payload, os.environ['PAPERCLIP_AGENT_JWT_SECRET'], algorithm='HS256'))
 " 2>/dev/null || echo "")
-  echo "Generated fresh Paperclip API JWT for cron (agent ${PAPERCLIP_AGENT_ID})."
-else
-  echo "FATAL: Missing PAPERCLIP_AGENT_JWT_SECRET or PAPERCLIP_AGENT_ID. Cannot authenticate to Paperclip API."
+
+if [ -z "${PAPERCLIP_API_KEY}" ]; then
+  echo "FATAL: Failed to generate Paperclip API JWT. Check PAPERCLIP_AGENT_JWT_SECRET and PAPERCLIP_AGENT_ID."
   exit 1
 fi
+echo "Generated fresh Paperclip API JWT for cron (agent ${PAPERCLIP_AGENT_ID}, run ${CRON_RUN_ID})."
 
-# Unset stale RUN_ID — the cron fires autonomously with no heartbeat context.
-# Sending a completed run's ID could cause the PATCH to be rejected.
-unset PAPERCLIP_RUN_ID
+# Use the cron-generated run_id for X-Paperclip-Run-Id header.
+export PAPERCLIP_RUN_ID="$CRON_RUN_ID"
 
 # --- Paperclip context ---
 ISSUE_ID="3a3edfde-dfcc-45d7-b873-4ac38b7dcf6f"
@@ -128,16 +129,11 @@ PAYLOAD=$(jq -n \
   --arg comment "$METRICS_COMMENT" \
   '{status:$status, comment:$comment}')
 
-# Post to Paperclip (include run ID header if available)
-RUN_HEADER=()
-if [ -n "${PAPERCLIP_RUN_ID:-}" ]; then
-  RUN_HEADER=(-H "X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID")
-fi
-
+# Post to Paperclip (include run ID header — always set now via CRON_RUN_ID)
 HTTP_RESPONSE=$(curl -sS -o /dev/null -w "%{http_code}" \
   -X PATCH "${API_BASE}/issues/${ISSUE_ID}" \
   -H "Authorization: Bearer ${PAPERCLIP_API_KEY}" \
-  "${RUN_HEADER[@]}" \
+  -H "X-Paperclip-Run-Id: ${PAPERCLIP_RUN_ID}" \
   -H "Content-Type: application/json" \
   --data-binary "$PAYLOAD" 2>&1) || HTTP_RESPONSE="curl_failed"
 
