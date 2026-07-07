@@ -103,9 +103,36 @@ function firstTouchText(p: OutboundProspect): string {
 }
 
 /** Day-3 follow-up. Shorter, references the first email, same single CTA. */
+function cleanTask(task: string | undefined): string {
+  if (!task) return "your biggest time-sink";
+  // Strip trailing "automation" to avoid "automating X automation"
+  const cleaned = task.replace(/\s+automation$/i, "").trim();
+  // If stripping removed everything meaningful, keep original
+  return cleaned || task;
+}
+
+function greetingName(p: OutboundProspect): string {
+  // If name looks like a person (first + last), use first name.
+  // If name is a company name (no space, or matches company field), fall back.
+  if (!p.name) return "there";
+  const parts = p.name.trim().split(/\s+/);
+  if (parts.length >= 2 && !p.name.match(/&(?:amp;)?|LLC|Inc|CPA|Co\.|Group|Partners|Associates|Consulting/i)) {
+    return parts[0];
+  }
+  // It's a company name — use "there" instead of a weird company fragment
+  return "there";
+}
+
+function taskPhrase(task: string | undefined): string {
+  // Produce a natural phrase: "your tax workflow" not "tax workflow"
+  const cleaned = cleanTask(task);
+  // Prepend "your" for natural reading in "automating your tax workflow"
+  return `your ${cleaned}`;
+}
+
 function followupHtml(p: OutboundProspect): string {
-  const name = p.name ? p.name.split(" ")[0] : "there";
-  const task = p.task ?? "your biggest time-sink";
+  const name = greetingName(p);
+  const task = taskPhrase(p.task);
   return `<!doctype html><html><body style="font-family:system-ui,sans-serif;max-width:520px">
 <p>Hi ${name},</p>
 <p>Quick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:</p>
@@ -115,8 +142,8 @@ function followupHtml(p: OutboundProspect): string {
 </body></html>`;
 }
 function followupText(p: OutboundProspect): string {
-  const name = p.name ? p.name.split(" ")[0] : "there";
-  const task = p.task ?? "your biggest time-sink";
+  const name = greetingName(p);
+  const task = taskPhrase(p.task);
   return `Hi ${name},\n\nQuick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:\n\nIs this worth a 30-minute look? I'll come with a build plan already drafted, and if the agent doesn't save you hours, you don't pay the $750.\n\nGrab a slot here: https://agentfit-mu.vercel.app/offer — or just reply "no" and I'll stop.\n\n— Alex\nAgentFit`;
 }
 
