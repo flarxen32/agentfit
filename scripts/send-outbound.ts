@@ -82,7 +82,7 @@ function flagBool(name: string): boolean {
 
 /** First-touch email body. Personalized from the prospect pack. */
 function firstTouchHtml(p: OutboundProspect): string {
-  const name = p.name ? p.name.split(" ")[0] : "there";
+  const name = greetingName(p);
   const taskLine = p.task
     ? `<p>Based on your role${p.role ? ` as ${p.role}` : ""}, I'd bet your #1 time-sink is <strong>${p.task}</strong>. ${p.hook ?? ""}</p>`
     : `<p>${p.hook ?? ""}</p>`;
@@ -95,7 +95,7 @@ ${taskLine}
 </body></html>`;
 }
 function firstTouchText(p: OutboundProspect): string {
-  const name = p.name ? p.name.split(" ")[0] : "there";
+  const name = greetingName(p);
   const taskLine = p.task
     ? `Based on your role${p.role ? ` as ${p.role}` : ""}, I'd bet your #1 time-sink is ${p.task}. ${p.hook ?? ""}`
     : (p.hook ?? "");
@@ -112,14 +112,9 @@ function cleanTask(task: string | undefined): string {
 }
 
 function greetingName(p: OutboundProspect): string {
-  // If name looks like a person (first + last), use first name.
-  // If name is a company name (no space, or matches company field), fall back.
-  if (!p.name) return "there";
-  const parts = p.name.trim().split(/\s+/);
-  if (parts.length >= 2 && !p.name.match(/&(?:amp;)?|LLC|Inc|CPA|Co\.|Group|Partners|Associates|Consulting/i)) {
-    return parts[0];
-  }
-  // It's a company name — use "there" instead of a weird company fragment
+  // The prospect list stores company names in the `name` field (name == company
+  // for all 50 entries). Never use a company name fragment as a greeting —
+  // "Hi Dragonfly" or "Hi Lounge" looks robotic and wrong. Always use "there".
   return "there";
 }
 
