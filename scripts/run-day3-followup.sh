@@ -29,11 +29,23 @@ if [ -f .paperclip-env ]; then
   set +a
 fi
 
-# --- Generate a fresh Paperclip API JWT at runtime ---
-# Generate run_id in shell so both JWT payload and X-Paperclip-Run-Id header match.
-CRON_RUN_ID=$(python3 -c "import uuid; print(uuid.uuid4())")
-export PAPERCLIP_API_KEY=$(PAPERCLIP_RUN_ID="$CRON_RUN_ID" python3 -c "
-import jwt, time, os, uuid
+# --- Paperclip API credentials ---
+# When called from a Hermes cron session (job 93323e3c), PAPERCLIP_API_KEY and
+# PAPERCLIP_RUN_ID are already set by the runtime with a valid checked-out run.
+# Reuse them so the PATCH succeeds — self-minted JWTs with a random run_id hit 409
+# (issue is checked out to a different run).
+#
+# When called from the system crontab (no Hermes runtime env), fall back to
+# minting a fresh JWT. This JWT can only READ issues reliably; PATCH may 409 if
+# another run holds the checkout. The email send itself is not affected.
+if [ -n "${PAPERCLIP_API_KEY:-}" ] && [ -n "${PAPERCLIP_RUN_ID:-}" ]; then
+  echo "Using existing Paperclip credentials from runtime (run ${PAPERCLIP_RUN_ID})."
+  CRON_RUN_ID="$PAPERCLIP_RUN_ID"
+elif [ -f .paperclip-env ]; then
+  echo "No runtime Paperclip credentials — minting fresh JWT from .paperclip-env (fallback path)."
+  CRON_RUN_ID=$(python3 -c "import uuid; print(uuid.uuid4())")
+  export PAPERCLIP_API_KEY=$(PAPERCLIP_RUN_ID="$CRON_RUN_ID" python3 -c "
+import jwt, time, os
 payload = {
     'sub': os.environ['PAPERCLIP_AGENT_ID'],
     'company_id': os.environ['PAPERCLIP_COMPANY_ID'],
@@ -46,15 +58,14 @@ payload = {
 }
 print(jwt.encode(payload, os.environ['PAPERCLIP_AGENT_JWT_SECRET'], algorithm='HS256'))
 " 2>/dev/null || echo "")
-
-if [ -z "${PAPERCLIP_API_KEY}" ]; then
-  echo "FATAL: Failed to generate Paperclip API JWT. Check PAPERCLIP_AGENT_JWT_SECRET and PAPERCLIP_AGENT_ID."
-  exit 1
+  if [ -z "${PAPERCLIP_API_KEY}" ]; then
+    echo "WARNING: Failed to mint Paperclip JWT. Emails will send but Paperclip update will be skipped."
+  fi
+  export PAPERCLIP_RUN_ID="$CRON_RUN_ID"
+else
+  echo "WARNING: No Paperclip credentials available (no runtime env, no .paperclip-env). Paperclip update will be skipped."
+  CRON_RUN_ID=""
 fi
-echo "Generated fresh Paperclip API JWT for cron (agent ${PAPERCLIP_AGENT_ID}, run ${CRON_RUN_ID})."
-
-# Use the cron-generated run_id for X-Paperclip-Run-Id header.
-export PAPERCLIP_RUN_ID="$CRON_RUN_ID"
 
 # --- Paperclip context ---
 ISSUE_ID="3a3edfde-dfcc-45d7-b873-4ac38b7dcf6f"
@@ -129,16 +140,22 @@ PAYLOAD=$(jq -n \
   --arg comment "$METRICS_COMMENT" \
   '{status:$status, comment:$comment}')
 
-# Post to Paperclip (include run ID header — always set now via CRON_RUN_ID)
-HTTP_RESPONSE=$(curl -sS -o /dev/null -w "%{http_code}" \
-  -X PATCH "${API_BASE}/issues/${ISSUE_ID}" \
-  -H "Authorization: Bearer ${PAPERCLIP_API_KEY}" \
-  -H "X-Paperclip-Run-Id: ${PAPERCLIP_RUN_ID}" \
-  -H "Content-Type: application/json" \
-  --data-binary "$PAYLOAD" 2>&1) || HTTP_RESPONSE="curl_failed"
-
-echo "Paperclip update HTTP status: $HTTP_RESPONSE"
+# Post to Paperclip. Skip gracefully if no credentials (email send already succeeded).
+if [ -n "${PAPERCLIP_API_KEY}" ] && [ -n "${PAPERCLIP_RUN_ID}" ]; then
+  HTTP_RESPONSE=$(curl -sS -o /dev/null -w "%{http_code}" \
+    -X PATCH "${API_BASE}/issues/${ISSUE_ID}" \
+    -H "Authorization: Bearer ${PAPERCLIP_API_KEY}" \
+    -H "X-Paperclip-Run-Id: ${PAPERCLIP_RUN_ID}" \
+    -H "Content-Type: application/json" \
+    --data-binary "$PAYLOAD" 2>&1) || HTTP_RESPONSE="curl_failed"
+  echo "Paperclip update HTTP status: $HTTP_RESPONSE"
+  if [ "$HTTP_RESPONSE" != "200" ]; then
+    echo "WARNING: Paperclip PATCH returned $HTTP_RESPONSE (may be 409 run-ownership conflict). Email send succeeded; metrics recorded in outbound-log.jsonl."
+  fi
+else
+  echo "SKIP: No Paperclip credentials available. Email send succeeded; metrics in outbound-log.jsonl."
+fi
 
 echo ""
 echo "=== XRO-42 Day-3 follow-up complete. ==="
-echo "Follow-up sent to ${FOLLOWUP_SENT} prospects. Issue updated."
+echo "Follow-up sent to ${FOLLOWUP_SENT} prospects."
