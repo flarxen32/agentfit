@@ -13,7 +13,7 @@
 
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { resolve } from "path";
-import { dns } from "dns";
+import * as dns from "dns";
 
 // --- Helpers ---
 function dnsMxLookup(domain: string): Promise<boolean> {
