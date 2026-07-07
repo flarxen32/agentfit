@@ -6,6 +6,14 @@ set -euo pipefail
 
 cd /home/nog/agentfit
 
+# --- Mutual exclusion: prevent dual-fire race (Hermes cron + system crontab) ---
+# If two cron mechanisms fire at the same instant, flock ensures only one runs.
+exec 9>/tmp/xro42-day3-followup.lock
+if ! flock -n 9; then
+  echo "SKIP: Another instance of run-day3-followup.sh is already running (flock held). No double-send."
+  exit 0
+fi
+
 # --- Load Resend credentials ---
 set -a
 source .env.local
