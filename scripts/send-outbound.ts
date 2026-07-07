@@ -132,14 +132,14 @@ function followupHtml(p: OutboundProspect): string {
 <p>Hi ${name},</p>
 <p>Quick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:</p>
 <p>Is this worth a 30-minute look? I'll come with a build plan already drafted, and if the agent doesn't save you hours, you don't pay the $750.</p>
-<p><a href="https://agentfit-mu.vercel.app/offer">Grab a slot here</a> — or just reply "no" and I'll stop.</p>
+<p><a href="https://agentfit-mu.vercel.app/offer?utm_source=outbound&utm_medium=email&utm_campaign=day3-followup">Grab a slot here</a> — or just reply "no" and I'll stop.</p>
 <p>— Alex<br/>AgentFit</p>
 </body></html>`;
 }
 function followupText(p: OutboundProspect): string {
   const name = greetingName(p);
   const task = taskPhrase(p.task);
-  return `Hi ${name},\n\nQuick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:\n\nIs this worth a 30-minute look? I'll come with a build plan already drafted, and if the agent doesn't save you hours, you don't pay the $750.\n\nGrab a slot here: https://agentfit-mu.vercel.app/offer — or just reply "no" and I'll stop.\n\n— Alex\nAgentFit`;
+  return `Hi ${name},\n\nQuick follow-up on my note about automating ${task}. I don't want to clutter your inbox — just one question:\n\nIs this worth a 30-minute look? I'll come with a build plan already drafted, and if the agent doesn't save you hours, you don't pay the $750.\n\nGrab a slot here: https://agentfit-mu.vercel.app/offer?utm_source=outbound&utm_medium=email&utm_campaign=day3-followup — or just reply "no" and I'll stop.\n\n— Alex\nAgentFit`;
 }
 
 const LOG = join(process.cwd(), "data", "outbound-log.jsonl");
