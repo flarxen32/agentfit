@@ -84,7 +84,7 @@ BOUNCED_COUNT=$(jq '[.results | to_entries[] | select(.value=="bounced")] | leng
 PROSPECT_TOTAL=$(jq 'length' data/outbound-prospects.json 2>/dev/null || echo "50")
 FOLLOWUP_TARGET=$((PROSPECT_TOTAL - BOUNCED_COUNT))
 echo "Starting follow-up send to ${FOLLOWUP_TARGET} prospects (${BOUNCED_COUNT} bounced excluded)..."
-npx tsx scripts/send-outbound.ts --template followup --exclude-bounced
+npx tsx scripts/send-outbound.ts --template followup --exclude-bounced --exclude-replies
 
 echo ""
 echo "Send complete. Collecting metrics..."

@@ -56,6 +56,22 @@ function bouncedEmails(): Set<string> {
   return bounced;
 }
 
+/** Read the manual do-not-send list (replied, opted out, manually excluded).
+ *  File format: ["email@x.com", ...] — lowercase. Created/updated manually
+ *  when replies arrive so follow-ups don't go to people already engaged. */
+function doNotSendEmails(): Set<string> {
+  const dns = new Set<string>();
+  const dnsFile = join(process.cwd(), "data", "do-not-send.json");
+  if (!existsSync(dnsFile)) return dns;
+  try {
+    const data = JSON.parse(readFileSync(dnsFile, "utf8"));
+    if (Array.isArray(data)) {
+      for (const email of data) if (typeof email === "string") dns.add(email.toLowerCase());
+    }
+  } catch { /* ignore read errors */ }
+  return dns;
+}
+
 function flag(name: string): string | undefined {
   const i = process.argv.indexOf(name);
   return i >= 0 ? process.argv[i + 1] : undefined;
@@ -117,6 +133,7 @@ async function main() {
   const template = flag("--template") ?? "first";
   const skipSent = flagBool("--skip-sent");
   const excludeBounced = flagBool("--exclude-bounced");
+  const excludeReplies = flagBool("--exclude-replies");
 
   let prospects: OutboundProspect[];
   try {
@@ -140,6 +157,14 @@ async function main() {
     const skipped = before - prospects.length;
     if (skipped > 0) console.log(`--exclude-bounced: ${skipped} bounced address(es) suppressed; ${prospects.length} remaining.`);
     else console.log(`--exclude-bounced: no bounced addresses found in data/first-touch-delivery-status.json; ${prospects.length} remaining.`);
+  }
+  if (excludeReplies) {
+    const dns = doNotSendEmails();
+    const before = prospects.length;
+    prospects = prospects.filter((p) => !dns.has(p.email.toLowerCase()));
+    const skipped = before - prospects.length;
+    if (skipped > 0) console.log(`--exclude-replies: ${skipped} replied/opted-out address(es) suppressed; ${prospects.length} remaining.`);
+    else console.log(`--exclude-replies: data/do-not-send.json empty or missing; ${prospects.length} remaining.`);
   }
   if (limit) prospects = prospects.slice(0, limit);
   console.log(`${dryRun ? "[DRY RUN] " : ""}Sending ${template} to ${prospects.length} prospect(s).`);
